@@ -1,5 +1,9 @@
 *.DS_Store
 
+# log and output files
+*.hlt
+*.log
+
 # developer environment
 .idea/
 __pycache__/
