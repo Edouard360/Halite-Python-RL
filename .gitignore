@@ -1,0 +1,5 @@
+*.DS_Store
+
+# developer environment
+.idea/
+__pycache__/
