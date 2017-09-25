@@ -2,7 +2,7 @@
 
 Halite challenge overview:
 
-![Halite Overview](https://media.giphy.com/media/xT9IgGmI0NQFFEL3jO/giphy.gif)
+![halite](https://user-images.githubusercontent.com/15527397/30818756-c0526c06-a21c-11e7-95a8-317dded1e761.gif)
 
 -x : the duration of the game in number of turns
 
