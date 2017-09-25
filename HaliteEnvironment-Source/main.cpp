@@ -41,12 +41,13 @@ int main(int argc, char ** argv) {
     TCLAP::SwitchArg quietSwitch("q", "quiet", "Runs game in quiet mode, producing machine-parsable output.", cmd, false);
     TCLAP::SwitchArg overrideSwitch("o", "override", "Overrides player-sent names using cmd args [SERVER ONLY].", cmd, false);
     TCLAP::SwitchArg timeoutSwitch("t", "timeout", "Causes game environment to ignore timeouts (give all bots infinite time).", cmd, false);
+    TCLAP::SwitchArg no_file_output("j", "nooutuput", "Removes output.", cmd, false);
 
     //Value Args
     TCLAP::ValueArg<unsigned int> nPlayersArg("n", "nplayers", "Create a map that will accommodate n players [SINGLE PLAYER MODE ONLY].", false, 1, "{1,2,3,4,5,6}", cmd);
     TCLAP::ValueArg< std::pair<signed int, signed int> > dimensionArgs("d", "dimensions", "The dimensions of the map.", false, { 0, 0 }, "a string containing two space-seprated positive integers", cmd);
     TCLAP::ValueArg<unsigned int> seedArg("s", "seed", "The seed for the map generator.", false, 0, "positive integer", cmd);
-
+    TCLAP::ValueArg<int> customMaxTurnNumberArg("x", "maxturn", "The number of turns.", false, 0, "positive integer", cmd);
     //Remaining Args, be they start commands and/or override names. Description only includes start commands since it will only be seen on local testing.
     TCLAP::UnlabeledMultiArg<std::string> otherArgs("NonspecifiedArgs", "Start commands for bots.", false, "Array of strings", cmd);
 
@@ -67,6 +68,7 @@ int main(int argc, char ** argv) {
 
     std::vector<std::string> unlabeledArgsVector = otherArgs.getValue();
     std::list<std::string> unlabeledArgs;
+    std::list<std::string> unlabeledArgsCycle; // The RandomBot should be played more than once.
     for(auto a = unlabeledArgsVector.begin(); a != unlabeledArgsVector.end(); a++) {
         unlabeledArgs.push_back(*a);
     }
@@ -76,6 +78,8 @@ int main(int argc, char ** argv) {
         mapWidth = mapSizeChoices[rand() % mapSizeChoices.size()];
         mapHeight = mapWidth;
     }
+
+    GameStatistics stats;
 
     if(override_names) {
         if(unlabeledArgs.size() < 4 || unlabeledArgs.size() % 2 != 0) {
@@ -132,12 +136,17 @@ int main(int argc, char ** argv) {
         exit(1);
     }
 
+    while(true){
+        seed = (std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count() % 4294967295);
+        my_game = new Halite(mapWidth, mapHeight, seed, n_players_for_map_creation, networking, ignore_timeout);
 
+        stats = my_game->runGame(names, seed, id, no_file_output.getValue(),customMaxTurnNumberArg.getValue());
 
-    //Create game. Null parameters will be ignored.
-    my_game = new Halite(mapWidth, mapHeight, seed, n_players_for_map_creation, networking, ignore_timeout);
+        if(names != NULL) delete names;
 
-    GameStatistics stats = my_game->runGame(names, seed, id);
+        //delete my_game;
+    }
+
     if(names != NULL) delete names;
 
     std::string victoryOut;
