@@ -1,8 +1,9 @@
 # Halite-Python-RL
 
-Halite challenge overview:
 
-![halite](https://user-images.githubusercontent.com/15527397/30818756-c0526c06-a21c-11e7-95a8-317dded1e761.gif)
+<p align="center"> <b> Halite Challenge Overview </b> <br> <a href="https://halite.io/" target="_blank"><img width="480" alt="A-Frame" src="https://user-images.githubusercontent.com/15527397/30818756-c0526c06-a21c-11e7-95a8-317dded1e761.gif"></a></p>
+
+## Artificial Intelligence & Reinforcement Learning
 
 -x : the duration of the game in number of turns
 
