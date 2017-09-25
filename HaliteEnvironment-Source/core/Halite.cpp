@@ -383,6 +383,9 @@ GameStatistics Halite::runGame(std::vector<std::string> * names_, unsigned int s
         p.average_frame_response_time = total_frame_response_times[a] / double(alive_frame_count[a]); //In milliseconds.
         stats.player_statistics.push_back(p);
     }
+    for(unsigned char a = 0; a < number_of_players; a++) {
+        std::async(&Networking::handleEndNetworking, &networking, static_cast<unsigned char>(a + 1));
+    }
     stats.timeout_tags = timeout_tags;
     stats.timeout_log_filenames = std::vector<std::string>(timeout_tags.size());
     //Output gamefile. First try the replays folder; if that fails, just use the straight filename.

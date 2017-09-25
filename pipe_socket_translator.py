@@ -52,9 +52,11 @@ try:
         sendStringPipe(getStringSocket())  # Player Name / Ready Response
 
         # Run Frame Loop
-        for i in range(30):  # while True:
+        while (getStringPipe() == 'Get map and play!'):  # while True:
+            sendStringSocket('Get map and play!')
             sendStringSocket(getStringPipe())  # Frame Map
             sendStringPipe(getStringSocket())  # Move List
+        sendStringSocket('Stop playing!')
 
 except Exception as e:
     # logging.warning(traceback.format_exc())

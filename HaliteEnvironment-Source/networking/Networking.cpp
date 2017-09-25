@@ -373,6 +373,8 @@ int Networking::handleFrameNetworking(unsigned char playerTag, const unsigned sh
 
         //Send this bot the game map and the messages addressed to this bot
         std::string mapString = serializeMap(m);
+        std::string play = "Get map and play!";
+        sendString(playerTag, play);
         sendString(playerTag, mapString);
 
         moves->clear();
@@ -400,6 +402,13 @@ int Networking::handleFrameNetworking(unsigned char playerTag, const unsigned sh
         *moves = std::map<hlt::Location, unsigned char>();
     }
     return -1;
+}
+
+void Networking::handleEndNetworking(unsigned char playerTag) {
+    std::string stopplay = "Stop playing!";
+    sendString(playerTag, stopplay);
+    std::string outMessage = "End Message sent to player " + std::to_string(int(playerTag)) + ".\n";
+    if(!quiet_output) std::cout << outMessage;
 }
 
 void Networking::killPlayer(unsigned char playerTag) {
