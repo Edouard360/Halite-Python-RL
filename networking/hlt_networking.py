@@ -1,5 +1,6 @@
 import socket
-from public.hlt import translate_cardinal, GameMap
+
+from public.hlt import GameMap, translate_cardinal
 
 
 class HLT:

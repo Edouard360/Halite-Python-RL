@@ -1,7 +1,7 @@
 import random
 
+from public.hlt import EAST, Move, NORTH, SOUTH, STILL, WEST
 from public.models.bot.bot import Bot
-from public.hlt import NORTH, EAST, SOUTH, WEST, STILL, Move
 
 
 class RandomBot(Bot):

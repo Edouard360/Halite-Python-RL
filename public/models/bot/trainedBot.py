@@ -1,7 +1,6 @@
 from public.models.agent.vanillaAgent import VanillaAgent
 from public.models.bot.bot import Bot
-from train.reward import getGameState, formatMoves
-import tensorflow as tf
+from train.reward import formatMoves, getGameState
 
 
 class TrainedBot(Bot):

@@ -15,14 +15,11 @@ env:
   - $COVPYYAML=cov41-pyyaml,coveralls41
 
 script:
-  #- pytest # or py.test for Python versions 3.5 and below
-  #- tox -e $(echo py$TRAVIS_PYTHON_VERSION | tr -d . | sed -e 's/pypypy/pypy/')-$COVPYYAML
-  - coverage run --source=featureEngineering setup.py test
-  - pylint main.py
+  # Tests
   - python -m unittest discover -v
+  # Style checks
+  - pylint main.py
 
-after_success:
-  coveralls
 
 notifications:
   email:

@@ -1,6 +1,5 @@
 import socket
-import sys, traceback
-import logging
+import sys
 
 # logging.basicConfig(filename='example.log', level=logging.DEBUG)
 
