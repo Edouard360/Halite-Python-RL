@@ -1,5 +1,5 @@
 import socket
-from hlt import translate_cardinal, GameMap
+from public.hlt import translate_cardinal, GameMap
 
 
 class HLT:
@@ -35,3 +35,7 @@ class HLT:
         self.sendString(' '.join(
             str(move.square.x) + ' ' + str(move.square.y) + ' ' + str(translate_cardinal(move.direction)) for move in
             moves))
+
+        #
+        # if __name__ =="__main__":
+        #     HLT(2000)

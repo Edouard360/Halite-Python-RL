@@ -20,14 +20,14 @@ def opposite_cardinal(direction):
 
 Square = namedtuple('Square', 'x y owner strength production')
 
-
 Move = namedtuple('Move', 'square direction')
 
 
 class GameMap:
     def __init__(self, size_string, production_string, map_string=None):
         self.width, self.height = tuple(map(int, size_string.split()))
-        self.production = tuple(tuple(map(int, substring)) for substring in grouper(production_string.split(), self.width))
+        self.production = tuple(
+            tuple(map(int, substring)) for substring in grouper(production_string.split(), self.width))
         self.contents = None
         self.get_frame(map_string)
         self.starting_player_count = len(set(square.owner for square in self)) - 1
@@ -61,10 +61,12 @@ class GameMap:
         assert isinstance(include_self, bool)
         assert isinstance(n, int) and n > 0
         if n == 1:
-            combos = ((0, -1), (1, 0), (0, 1), (-1, 0), (0, 0))   # NORTH, EAST, SOUTH, WEST, STILL ... matches indices provided by enumerate(game_map.neighbors(square))
+            combos = ((0, -1), (1, 0), (0, 1), (-1, 0), (0,
+                                                         0))  # NORTH, EAST, SOUTH, WEST, STILL ... matches indices provided by enumerate(game_map.neighbors(square))
         else:
-            combos = ((dx, dy) for dy in range(-n, n+1) for dx in range(-n, n+1) if abs(dx) + abs(dy) <= n)
-        return (self.contents[(square.y + dy) % self.height][(square.x + dx) % self.width] for dx, dy in combos if include_self or dx or dy)
+            combos = ((dx, dy) for dy in range(-n, n + 1) for dx in range(-n, n + 1) if abs(dx) + abs(dy) <= n)
+        return (self.contents[(square.y + dy) % self.height][(square.x + dx) % self.width] for dx, dy in combos if
+                include_self or dx or dy)
 
     def get_target(self, square, direction):
         "Returns a single, one-step neighbor in a given direction."
@@ -76,6 +78,7 @@ class GameMap:
         dx = min(abs(sq1.x - sq2.x), sq1.x + self.width - sq2.x, sq2.x + self.width - sq1.x)
         dy = min(abs(sq1.y - sq2.y), sq1.y + self.height - sq2.y, sq2.y + self.height - sq1.y)
         return dx + dy
+
 
 #################################################################
 # Functions for communicating with the Halite game environment  #
@@ -108,4 +111,6 @@ def translate_cardinal(direction):
 
 
 def send_frame(moves):
-    send_string(' '.join(str(move.square.x) + ' ' + str(move.square.y) + ' ' + str(translate_cardinal(move.direction)) for move in moves))
+    send_string(' '.join(
+        str(move.square.x) + ' ' + str(move.square.y) + ' ' + str(translate_cardinal(move.direction)) for move in
+        moves))

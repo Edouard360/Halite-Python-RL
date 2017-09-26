@@ -1,7 +1,7 @@
 .PHONY: all
 all:
-	cd HaliteEnvironment-Source/; make; cd ..; mv HaliteEnvironment-Source/halite halite;
+	cd src/; make; cd ..; mv src/halite public/halite;
 
 .PHONY: clean
 clean:
-	rm ./halite; cd HaliteEnvironment-Source/; make clean; cd ..;
+	rm public/halite; cd src/; make clean; cd ..;
