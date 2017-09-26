@@ -1,5 +1,4 @@
 [![Build Status](https://travis-ci.org/louis-r/Halite-Python-RL.svg?branch=master)](https://travis-ci.org/louis-r/Halite-Python-RL)
-Test
 # Halite-Python-RL
 
 <p align="center"> <b> Halite Challenge Overview </b> <br> 
