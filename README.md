@@ -52,17 +52,16 @@ Conquering is only possible once the square's strength is high enough, such that
 The white numbers on the map below represent the current strength of the squares. On the left is just a snap of the initial state of the game. On the right you can see the strength of the blue square increment over time. This is because our agent decides to stay (action = STILL).
 
 <p align="center">
-
-<img alt="the strength map" src="https://user-images.githubusercontent.com/15527397/30869344-24b55702-a2e1-11e7-9383-0dc7f562e5d6.png" height="190" width="32%">
- 
-<img height="190" width="32%" src="https://user-images.githubusercontent.com/15527397/30869349-27abe944-a2e1-11e7-8b6e-94dfde9e15a1.gif"></p>
+<img height="190" width="32%" alt="the strength map" src="https://user-images.githubusercontent.com/15527397/30869344-24b55702-a2e1-11e7-9383-0dc7f562e5d6.png">
+<img height="190" width="32%" src="https://user-images.githubusercontent.com/15527397/30869349-27abe944-a2e1-11e7-8b6e-94dfde9e15a1.gif">
+ </p>
 
 The increase in production is computed according to a fixed production map. In our example, we can see the blue square's strength increases by 4 at each turn. Each square has a different production speed, as represented by the white numbers below the squares. (cf below). On the left is also a snap of the initial game, whereas the game's dynamic is on the right. 
 
 <p align="center">
 <img alt="production map" src="https://user-images.githubusercontent.com/15527397/30869351-299bd8c2-a2e1-11e7-80d2-62699551aaa2.png" height="190" width="32%">
-
-<img height="190" width="32%" src="https://user-images.githubusercontent.com/15527397/30869356-2bce1fce-a2e1-11e7-86e6-339335636e0e.gif"></p>
+<img height="190" width="32%" src="https://user-images.githubusercontent.com/15527397/30869356-2bce1fce-a2e1-11e7-86e6-339335636e0e.gif">
+</p>
 
 This production map production is invariant over time, and is an information we should use to train our agent. Since we are interesting in maximizing our production, we should intuitively train our agent to target the squares with a high production rate.
 
@@ -70,7 +69,9 @@ On the other hand, we should also consider the strength map, since squares with 
 
 > To conquer a square, we must move in its direction having a strictly superior strength (action = NORTH, SOUTH, EAST, WEST)
 
-<p align="center"><img height="190" width="32%" src="https://user-images.githubusercontent.com/15527397/30869359-2e235f3c-a2e1-11e7-87ce-109ea5c08c27.gif"></p>
+<p align="center">
+<img height="190" width="32%" src="https://user-images.githubusercontent.com/15527397/30869359-2e235f3c-a2e1-11e7-87ce-109ea5c08c27.gif">
+</p>
 
 ### The Agent
 
@@ -87,14 +88,16 @@ For now, the Game State is a (3 * 3) * 3 matrix (width * height) * n_features, t
 - The Owner of the Square
 
 <p align="center">
-<img alt="matrix" src="https://user-images.githubusercontent.com/15527397/30869363-30c46a56-a2e1-11e7-8882-1c22bc2256f8.png" height="220" width="32%">
-
-<img height="220" width="32%" src="https://user-images.githubusercontent.com/15527397/30869368-32e9be94-a2e1-11e7-831e-3d74b19981a4.gif"></p>
+<img height="220" width="32%" alt="matrix" src="https://user-images.githubusercontent.com/15527397/30869363-30c46a56-a2e1-11e7-8882-1c22bc2256f8.png">
+<img height="220" width="32%" src="https://user-images.githubusercontent.com/15527397/30869368-32e9be94-a2e1-11e7-831e-3d74b19981a4.gif">
+</p>
 
 <br>
 As for the reward, we focus on the production. Since each square being conquered increase the total production of our land, the action leading to the conquest is rewarded according to the production rate of the conquered square. This strategy will best reward the conquest of highly productive squares.
 
-<p align="center"><img height="190" width="32%" src="https://user-images.githubusercontent.com/15527397/30869372-363a5c7a-a2e1-11e7-8784-9a83d4c62c44.gif"></p>
+<p align="center">
+<img height="190" width="32%" src="https://user-images.githubusercontent.com/15527397/30869372-363a5c7a-a2e1-11e7-8784-9a83d4c62c44.gif">
+</p>
  
 We train over 500 games and get significant improvements of the total reward obtained over time.
 
