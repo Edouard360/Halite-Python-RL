@@ -204,13 +204,13 @@ std::vector<bool> Halite::processNextFrame(std::vector<bool> alive) {
 }
 
 //Public Functions -------------------
-Halite::Halite(unsigned short width_, unsigned short height_, unsigned int seed_, unsigned short n_players_for_map_creation, Networking networking_, bool shouldIgnoreTimeout) {
+Halite::Halite(unsigned short width_, unsigned short height_, unsigned int seed_, unsigned short n_players_for_map_creation, Networking networking_, bool shouldIgnoreTimeout, int custom_max_strength) {
     networking = networking_;
     // number_of_players is the number of active bots to start the match; it is constant throughout game
     number_of_players = networking.numberOfPlayers();
 
     //Initialize map
-    game_map = hlt::Map(width_, height_, n_players_for_map_creation, seed_);
+    game_map = hlt::Map(width_, height_, n_players_for_map_creation, seed_, custom_max_strength);
 
     //If this is single-player mode, remove all the extra players (they were automatically inserted in map, just 0 them out)
     if (number_of_players == 1){

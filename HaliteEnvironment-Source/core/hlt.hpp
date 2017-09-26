@@ -52,7 +52,7 @@ namespace hlt{
             map_height = otherMap.map_height;
             contents = otherMap.contents;
         }
-        Map(short width, short height, unsigned char numberOfPlayers, unsigned int seed) {
+        Map(short width, short height, unsigned char numberOfPlayers, unsigned int seed, int custom_max_strength) {
             //Pseudorandom number generator.
             std::mt19937 prg(seed);
             std::uniform_real_distribution<double> urd(0.0, 1.0);
@@ -277,11 +277,11 @@ namespace hlt{
             contents = std::vector< std::vector<Site> >(map_height, std::vector<Site>(map_width));
             for(int a = 0; a < map_height; a++) for(int b = 0; b < map_width; b++) {
                 contents[a][b].owner = normalized[a][b].owner;
-                contents[a][b].strength = round(normalized[a][b].strength * TOP_STR);
+                contents[a][b].strength = round(normalized[a][b].strength * custom_max_strength); //custom_max_strength : to replace TOP_STR
                 contents[a][b].production = round(normalized[a][b].production * TOP_PROD);
                 if(contents[a][b].owner != 0 && contents[a][b].production == 0) contents[a][b].production = 1;
             }
-            std::cout << map_width << " " << map_height << std::endl;
+            //std::cout << map_width << " " << map_height << std::endl; Quiet output
         }
 
         bool inBounds(Location l) const {
