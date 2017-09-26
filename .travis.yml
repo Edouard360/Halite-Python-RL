@@ -18,7 +18,7 @@ script:
   # Tests
   - python -m unittest discover -v
   # Style checks
-  - pylint main.py
+  - pylint train/experience.py
 
 
 notifications:
