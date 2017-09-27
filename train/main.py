@@ -43,7 +43,7 @@ with tf.device("/cpu:0"):
 with tf.Session() as sess:
     sess.run(init)
     try:
-        saver.restore(sess, './public/models/' + master_agent.name)
+        saver.restore(sess, '../public/models/variables/' + master_agent.name+'/'+master_agent.name)
     except Exception:
         print("Model not found - initiating new one")
 

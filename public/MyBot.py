@@ -1,4 +1,9 @@
 import sys
+import os
+
+module_path = os.path.abspath(os.path.join('..'))
+if module_path not in sys.path:
+    sys.path.append(module_path)
 
 mode = 'server' if (len(sys.argv) == 1) else 'local'
 mode = 'local'  # TODO remove forcing

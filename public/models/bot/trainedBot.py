@@ -22,7 +22,7 @@ class TrainedBot(Bot):
         self.sess = tf.Session()
         self.sess.run(init)
         try:
-            saver.restore(self.sess, 'models/' + self.bot.agent.name)
+            saver.restore(self.sess, './models/variables/' + self.agent.name+'/'+ self.agent.name)
         except Exception:
             print("Model not found - initiating new one")
 

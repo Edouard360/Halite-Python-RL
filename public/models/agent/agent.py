@@ -9,9 +9,9 @@ class Agent:
         self.experience = experience
         if self.experience is not None:
             try:
-                self.experience.metric = np.load('models/' + self.name + '.npy')
+                self.experience.metric = np.load('../public/models/variables/'+self.name +'/'+self.name+'.npy')
             except:
-                print("New metric file created")
+                print("Metric file not found")
                 self.experience.metric = np.array([])
 
     def choose_actions(self, sess, game_state, debug=False):
