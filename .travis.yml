@@ -1,0 +1,27 @@
+sudo: false
+
+language: python
+
+python:
+  - 3.5
+
+install:
+  - pip install tox
+  - pip install coveralls
+  - pip install pylint
+  - pip install -r requirements.txt
+
+env:
+  - $COVPYYAML=cov41-pyyaml,coveralls41
+
+script:
+  # Tests
+  - python -m unittest discover -v
+  # Style checks
+  - pylint train/experience.py
+
+
+notifications:
+  email:
+    on_success: change
+    on_failure: change

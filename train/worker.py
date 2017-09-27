@@ -5,7 +5,7 @@ import time
 import tensorflow as tf
 
 from networking.hlt_networking import HLT
-from train.reward import getGameState, formatMoves
+from train.reward import formatMoves, getGameState
 
 
 def update_target_graph(from_scope, to_scope):

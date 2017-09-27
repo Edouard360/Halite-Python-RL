@@ -1,9 +1,15 @@
+"""
+Experience class definition
+"""
 import numpy as np
 
 from train.reward import allRewards, rawRewards
 
 
 class Experience:
+    """
+    Experience class to store moves, rewards and metric values
+    """
     def __init__(self):
         self.moves = np.array([])
         self.rewards = np.array([])
@@ -11,6 +17,9 @@ class Experience:
         self.metric = np.array([])
 
     def add_episode(self, game_states, moves):
+        # moves is not used here, kept for inheritance reasons
+        # TODO Edouard to act on this
+        # pylint: disable=W0612,W0613
         production_increments = np.sum(np.sum(rawRewards(game_states), axis=2), axis=1)
         self.metric = np.append(self.metric, production_increments.dot(np.linspace(2.0, 1.0, num=len(game_states) - 1)))
 
@@ -22,6 +31,9 @@ class Experience:
 
 
 class ExperienceVanilla(Experience):
+    """
+    Stores states in addition to the inherited attributes of Experience
+    """
     def __init__(self):
         super(ExperienceVanilla, self).__init__()
         self.states = np.array([]).reshape(0, 27)
