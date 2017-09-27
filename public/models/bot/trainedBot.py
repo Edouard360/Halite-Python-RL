@@ -1,17 +1,34 @@
 from public.models.agent.vanillaAgent import VanillaAgent
 from public.models.bot.bot import Bot
 from train.reward import formatMoves, getGameState
-
+import tensorflow as tf
 
 class TrainedBot(Bot):
-    def __init__(self, myID=None):
+    def __init__(self):
         lr = 1e-3;
         s_size = 9 * 3;
         a_size = 5;
         h_size = 50
-        self.agent = VanillaAgent(None, lr, s_size, a_size, h_size)
-        super(TrainedBot, self).__init__(myID)
+        tf.reset_default_graph()
 
-    def compute_moves(self, game_map, sess=None):
+        with tf.device("/cpu:0"):
+            with tf.variable_scope('global'):
+                self.agent = VanillaAgent(None, lr, s_size, a_size, h_size)
+
+        global_variables = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope='global')
+        saver = tf.train.Saver(global_variables)
+        init = tf.global_variables_initializer()
+
+        self.sess = tf.Session()
+        self.sess.run(init)
+        try:
+            saver.restore(self.sess, 'models/' + self.bot.agent.name)
+        except Exception:
+            print("Model not found - initiating new one")
+
+    def compute_moves(self, game_map):
         game_state = getGameState(game_map, self.myID)
-        return formatMoves(game_map, self.agent.choose_actions(sess, game_state))
+        return formatMoves(game_map, self.agent.choose_actions(self.sess, game_state))
+
+    def close(self):
+        self.sess.close()
