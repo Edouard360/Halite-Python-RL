@@ -7,6 +7,7 @@ python:
 
 install:
   - pip install -r requirements.txt
+  - make
 
 env:
   - $COVPYYAML=cov41-pyyaml,coveralls41
