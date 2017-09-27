@@ -6,9 +6,6 @@ python:
   - 3.5
 
 install:
-  - pip install tox
-  - pip install coveralls
-  - pip install pylint
   - pip install -r requirements.txt
 
 env:
@@ -19,7 +16,11 @@ script:
   - python -m unittest discover -v
   # Style checks
   - pylint train/experience.py
+  # Coverage checks
+  - py.test --cov=train tests/
 
+after_success:
+  coveralls
 
 notifications:
   email:
