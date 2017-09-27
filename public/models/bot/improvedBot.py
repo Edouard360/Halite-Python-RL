@@ -5,9 +5,6 @@ from public.models.bot.bot import Bot
 
 
 class ImprovedBot(Bot):
-    def __init__(self, myID):
-        super(ImprovedBot, self).__init__(myID)
-
     def compute_moves(self, game_map, sess=None):
         moves = []
         for square in game_map:
