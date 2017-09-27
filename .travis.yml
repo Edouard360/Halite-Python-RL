@@ -5,12 +5,20 @@ language: python
 python:
   - 3.5
 
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-4.9
+
+env:
+  global:
+    - CXX=g++-4.9
+
 install:
   - pip install -r requirements.txt
   - make
-
-env:
-  - $COVPYYAML=cov41-pyyaml,coveralls41
 
 script:
   # Tests
