@@ -13,10 +13,12 @@ else:  # 'local' mode
 
 from public.models.bot.improvedBot import ImprovedBot
 
+bot = ImprovedBot()
+
 while True:
     myID, game_map = hlt.get_init()
     hlt.send_init("OpponentBot")
-    bot = ImprovedBot(myID)
+    bot.setID(myID)
 
     while (mode == 'server' or hlt.get_string() == 'Get map and play!'):
         game_map.get_frame(hlt.get_string())

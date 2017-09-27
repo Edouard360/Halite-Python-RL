@@ -5,21 +5,31 @@ language: python
 python:
   - 3.5
 
-install:
-  - pip install tox
-  - pip install coveralls
-  - pip install pylint
-  - pip install -r requirements.txt
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-4.9
 
 env:
-  - $COVPYYAML=cov41-pyyaml,coveralls41
+  global:
+    - CXX=g++-4.9
+
+install:
+  - pip install -r requirements.txt
+  - make
 
 script:
   # Tests
   - python -m unittest discover -v
   # Style checks
   - pylint train/experience.py
+  # Coverage checks
+  - py.test --cov=train tests/
 
+after_success:
+  coveralls
 
 notifications:
   email:

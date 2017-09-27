@@ -12,7 +12,7 @@ def getGameState(game_map, myID):
         [[(square.owner == myID) + 0, square.strength, square.production] for square in game_map],
         [game_map.width, game_map.height, 3])
     return np.swapaxes(np.swapaxes(game_state, 2, 0), 1, 2) * (
-    1 / np.array([1, STRENGTH_SCALE, PRODUCTION_SCALE])[:, np.newaxis, np.newaxis])
+        1 / np.array([1, STRENGTH_SCALE, PRODUCTION_SCALE])[:, np.newaxis, np.newaxis])
 
 
 def getGameProd(game_state):
