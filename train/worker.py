@@ -1,12 +1,12 @@
 import multiprocessing
-import subprocess
 import time
+import os
 
 import tensorflow as tf
 
 from networking.hlt_networking import HLT
 from train.reward import formatMoves, getGameState
-
+from networking.start_game import start_game
 
 def update_target_graph(from_scope, to_scope):
     from_vars = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, from_scope)
@@ -25,7 +25,7 @@ class Worker():
         self.port = port + number
 
         def worker():
-            subprocess.call(['./networking/runGameDebugConfig.sh', str(self.port)])  # runSimulation
+            start_game(self.port, quiet=True, max_game=-1) # Infinite games
 
         self.p = multiprocessing.Process(target=worker)
         self.p.start()
@@ -59,7 +59,11 @@ class Worker():
                 self.agent.update_agent(sess)
 
                 if self.number == 0:
-                    saver.save(sess, './public/models/' + self.agent.name)
-                    self.agent.experience.save_metric('./public/models/' + self.agent.name)
+                    directory = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))+'/public/models/variables/'+self.agent.name+'/'
+                    if not os.path.exists(directory):
+                        print("Creating directory for agent :"+self.agent.name)
+                        os.makedirs(directory)
+                    saver.save(sess, directory+self.agent.name)
+                    self.agent.experience.save_metric(directory+self.agent.name)
 
         self.p.terminate()

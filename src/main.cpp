@@ -47,6 +47,7 @@ int main(int argc, char ** argv) {
     TCLAP::ValueArg<unsigned int> nPlayersArg("n", "nplayers", "Create a map that will accommodate n players [SINGLE PLAYER MODE ONLY].", false, 1, "{1,2,3,4,5,6}", cmd);
     TCLAP::ValueArg< std::pair<signed int, signed int> > dimensionArgs("d", "dimensions", "The dimensions of the map.", false, { 0, 0 }, "a string containing two space-seprated positive integers", cmd);
     TCLAP::ValueArg<unsigned int> seedArg("s", "seed", "The seed for the map generator.", false, 0, "positive integer", cmd);
+    TCLAP::ValueArg<int> max_game_args("g", "maxgame", "The max number of games.", false, 0, "integer", cmd);
     TCLAP::ValueArg<int> custom_max_strength_args("z", "maxstrength", "The max strength.", false, 0, "positive integer", cmd);
     TCLAP::ValueArg<int> customMaxTurnNumberArg("x", "maxturn", "The number of turns.", false, 0, "positive integer", cmd);
     //Remaining Args, be they start commands and/or override names. Description only includes start commands since it will only be seen on local testing.
@@ -136,8 +137,9 @@ int main(int argc, char ** argv) {
         std::cout << std::endl << "A map can only accommodate between 1 and 6 players." << std::endl << std::endl;
         exit(1);
     }
-
-    while(true){
+    int ng = max_game_args.getValue();
+    bool infinite_loop = ng==-1;
+    while(infinite_loop || ng-- > 0){
         seed = (std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count() % 4294967295);
         my_game = new Halite(mapWidth, mapHeight, seed, n_players_for_map_creation, networking, ignore_timeout, custom_max_strength_args.getValue());
 
@@ -145,7 +147,7 @@ int main(int argc, char ** argv) {
 
         if(names != NULL) delete names;
 
-        //delete my_game;
+
     }
 
     if(names != NULL) delete names;

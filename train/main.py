@@ -1,8 +1,11 @@
 import multiprocessing
-import sys
 import threading
-
+import os
+import sys
 import tensorflow as tf
+
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from public.models.agent.vanillaAgent import VanillaAgent
 from train.experience import ExperienceVanilla
@@ -43,7 +46,7 @@ with tf.device("/cpu:0"):
 with tf.Session() as sess:
     sess.run(init)
     try:
-        saver.restore(sess, './public/models/' + master_agent.name)
+        saver.restore(sess, os.path.abspath(os.path.dirname(__file__))+'/../public/models/variables/' + master_agent.name+'/'+master_agent.name)
     except Exception:
         print("Model not found - initiating new one")
 

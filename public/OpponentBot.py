@@ -6,10 +6,10 @@ mode = 'local'  # TODO remove forcing
 if mode == 'server':  # 'server' mode
     import hlt
 else:  # 'local' mode
-    from networking.hlt_networking import HLT
+    import context
 
     port = int(sys.argv[1]) if len(sys.argv) > 1 else 2000
-    hlt = HLT(port=port)
+    hlt = context.HLT(port=port)
 
 from public.models.bot.improvedBot import ImprovedBot
 

@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/louis-r/Halite-Python-RL.svg?branch=master)](https://travis-ci.org/louis-r/Halite-Python-RL) [![Coverage Status](https://coveralls.io/repos/github/Edouard360/Halite-Python-RL/badge.svg?branch=master)](https://coveralls.io/github/Edouard360/Halite-Python-RL?branch=master) [![Documentation Status](https://readthedocs.org/projects/halite-python-rl/badge/?version=latest)](http://halite-python-rl.readthedocs.io/en/latest/?badge=latest)
+[![Build Status](https://travis-ci.org/Edouard360/Halite-Python-RL.svg?branch=master)](https://travis-ci.org/Edouard360/Halite-Python-RL) [![Coverage Status](https://coveralls.io/repos/github/Edouard360/Halite-Python-RL/badge.svg?branch=master)](https://coveralls.io/github/Edouard360/Halite-Python-RL?branch=master) [![Documentation Status](https://readthedocs.org/projects/halite-python-rl/badge/?version=latest)](http://halite-python-rl.readthedocs.io/en/latest/?badge=latest)
 
 # Halite-Python-RL
 
