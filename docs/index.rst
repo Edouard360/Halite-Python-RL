@@ -9,17 +9,15 @@ Welcome to Halite-Python-RL's documentation!
 Contents:
 
 .. toctree::
-:maxdepth: 2
-        :caption: Contributors
+    :maxdepth: 2
+    :caption: Contributors
 
-        run
+    run
 
 
 Indices and tables
 ==================
 
-* :ref:`genindex`
-* :ref:`modindex`
 * :ref:`search`
 
 
