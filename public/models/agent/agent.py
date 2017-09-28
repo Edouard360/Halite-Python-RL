@@ -1,5 +1,5 @@
 import numpy as np
-
+import os
 from train.reward import localStateFromGlobal
 
 
@@ -9,7 +9,7 @@ class Agent:
         self.experience = experience
         if self.experience is not None:
             try:
-                self.experience.metric = np.load('../public/models/variables/'+self.name +'/'+self.name+'.npy')
+                self.experience.metric = np.load(os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))+'/variables/'+self.name +'/'+self.name+'.npy')
             except:
                 print("Metric file not found")
                 self.experience.metric = np.array([])

@@ -25,7 +25,7 @@ class Worker():
         self.port = port + number
 
         def worker():
-            start_game(self.port,'../')
+            start_game(self.port, quiet=True, max_game=-1) # Infinite games
 
         self.p = multiprocessing.Process(target=worker)
         self.p.start()
@@ -59,8 +59,9 @@ class Worker():
                 self.agent.update_agent(sess)
 
                 if self.number == 0:
-                    directory = '../public/models/variables/' + self.agent.name+'/'
+                    directory = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))+'/public/models/variables/'+self.agent.name+'/'
                     if not os.path.exists(directory):
+                        print("Creating directory for agent :"+self.agent.name)
                         os.makedirs(directory)
                     saver.save(sess, directory+self.agent.name)
                     self.agent.experience.save_metric(directory+self.agent.name)
