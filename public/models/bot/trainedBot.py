@@ -4,6 +4,7 @@ from train.reward import formatMoves, getGameState
 import tensorflow as tf
 import os
 
+
 class TrainedBot(Bot):
     def __init__(self):
         lr = 1e-3;
@@ -23,7 +24,8 @@ class TrainedBot(Bot):
         self.sess = tf.Session()
         self.sess.run(init)
         try:
-            saver.restore(self.sess, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')) +'/variables/'+ self.agent.name+'/'+ self.agent.name)
+            saver.restore(self.sess, os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                                                  '..')) + '/variables/' + self.agent.name + '/' + self.agent.name)
         except Exception:
             print("Model not found - initiating new one")
 

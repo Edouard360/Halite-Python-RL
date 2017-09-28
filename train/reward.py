@@ -1,7 +1,7 @@
 import numpy as np
+from public.hlt import NORTH, EAST, SOUTH, WEST, Move
 
 gamma = 0.8
-from public.hlt import NORTH, EAST, SOUTH, WEST, Move
 
 STRENGTH_SCALE = 255
 PRODUCTION_SCALE = 10
