@@ -24,7 +24,11 @@ script:
   # Tests
   - python -m unittest discover -v
   # Style checks
-  - pylint train/experience.py
+  # Temporary workaround
+  - while read line; do
+    pylint $line
+    done < pylint_checks.txt
+
   # Coverage checks
   - py.test --cov=train tests/
 
