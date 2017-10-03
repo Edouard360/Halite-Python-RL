@@ -33,5 +33,9 @@ class TrainedBot(Bot):
         game_state = getGameState(game_map, self.myID)
         return formatMoves(game_map, self.agent.choose_actions(self.sess, game_state))
 
+    def get_policies(self, game_state):
+        # Warning this is not hereditary
+        return self.agent.get_policies(self.sess, game_state)
+
     def close(self):
         self.sess.close()

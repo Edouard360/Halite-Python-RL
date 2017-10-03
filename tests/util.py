@@ -18,4 +18,4 @@ def game_states_from_url(GAME_URL):
     moves = np.array(game['moves'])
 
     game_states = np.concatenate(([owner_frames, strength_frames, production_frames]), axis=1)
-    return game_states / np.array([1, 255, 10])[:, np.newaxis, np.newaxis], moves
+    return game_states, moves

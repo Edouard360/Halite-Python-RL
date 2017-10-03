@@ -11,6 +11,10 @@
 
 <a href="https://halite.io/">Halite</a> is an open source artificial intelligence programming challenge, created by <a href="https://www.twosigma.com/">Two Sigma</a>, where players build bots using the coding language of their choice to battle on a two-dimensional virtual board. The last bot standing or the bot with all the territory wins. Victory will require micromanaging of the movement of pieces, optimizing a bot’s combat ability, and braving a branching factor billions of times higher than that of Go.
 
+## Documentation
+
+The documentation is available <a href="http://halite-python-rl.readthedocs.io/en/latest/?badge=latest">here</a>.
+
 ## Objective
 
 The objective of the project is to apply **Reinforcement Learning** strategies to teach the Bot to perform as well as possible. We teach an agent to learn the best actions to play at each turn. More precisely, given the game state, our untrained Bot **initially performs random actions, but gets rewarded for the good one**. Over time, the Bot automatically learns how to conquer efficiently the map.

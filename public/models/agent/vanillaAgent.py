@@ -6,8 +6,8 @@ from public.models.agent.agent import Agent
 
 
 class VanillaAgent(Agent):
-    def __init__(self, experience, lr, s_size, a_size, h_size):  # all these are optional ?
-        super(VanillaAgent, self).__init__('vanilla', experience)
+    def __init__(self, experience, lr = 1e-3, s_size = 9 * 3, a_size = 5, h_size = 50):  # all these are optional ?
+        super(VanillaAgent, self).__init__('vanilla-ter', experience)
 
         # These lines established the feed-forward part of the network. The agent takes a state and produces an action.
         self.state_in = tf.placeholder(shape=[None, s_size], dtype=tf.float32)
@@ -40,7 +40,11 @@ class VanillaAgent(Agent):
 
             self.updateGlobal = optimizer.apply_gradients(zip(self.gradientHolders, global_vars))  # self.tvars
 
+    def get_policy(self,sess, state):
+        return sess.run(self.policy, feed_dict={self.state_in: [state.reshape(-1)]})
+
     def choose_action(self, sess, state, frac_progress=1.0, debug=False):  # it only a state, not the game state...
+        # Here the state is normalized !
         if (np.random.uniform() >= frac_progress):
             a = np.random.choice(range(5))
         else:
