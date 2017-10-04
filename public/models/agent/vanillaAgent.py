@@ -6,8 +6,8 @@ from public.models.agent.agent import Agent
 
 
 class VanillaAgent(Agent):
-    def __init__(self, experience, lr = 1e-3, s_size = 9 * 3, a_size = 5, h_size = 50):  # all these are optional ?
-        super(VanillaAgent, self).__init__('vanilla-ter', experience)
+    def __init__(self, experience, lr = 1e-2, s_size = 9 * 3, a_size = 5, h_size = 50):  # all these are optional ?
+        super(VanillaAgent, self).__init__('vanilla-cin', experience)
 
         # These lines established the feed-forward part of the network. The agent takes a state and produces an action.
         self.state_in = tf.placeholder(shape=[None, s_size], dtype=tf.float32)

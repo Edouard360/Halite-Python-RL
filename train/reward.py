@@ -8,7 +8,7 @@ PRODUCTION_SCALE = 10
 def getGameState(game_map, myID):
     game_state = np.reshape(
         [[(square.owner == myID) + 0, square.strength, square.production] for square in game_map],
-        [game_map.width, game_map.height, 3])
+        [game_map.height, game_map.width, 3])
     return np.swapaxes(np.swapaxes(game_state, 2, 0), 1, 2)
 
 
@@ -39,6 +39,21 @@ def discount_rewards(r, gamma=0.8):
         discounted_r[t] = running_add
     return discounted_r
 
+def take_surrounding_square(game_state, x, y, size = 1):
+    return np.take(np.take(game_state, range(y - size, y + size + 1), axis=1, mode='wrap'),
+                   range(x - size, x + size + 1), axis=2, mode='wrap')
+
+def take_surrounding_losange(game_state, x, y, size = 2):
+    np.take(np.take(game_state, y, axis=1, mode='wrap'),
+                       range(x - 2, x + 2 + 1), axis=2, mode='wrap')
+    np.take(np.take(game_state, y+1, axis=1, mode='wrap'),
+                       range(x - 1, x + 1 + 1), axis=2, mode='wrap')
+    np.take(np.take(game_state, y-1, axis=1, mode='wrap'),
+                       range(x - 1, x + 1 + 1), axis=2, mode='wrap')
+    np.take(np.take(game_state, y+2, axis=1, mode='wrap'),
+                       x, axis=2, mode='wrap')
+    np.take(np.take(game_state, y-2, axis=1, mode='wrap'),
+                       x, axis=2, mode='wrap')
 
 def localStateFromGlobal(game_state, x, y, size=1):
     # TODO: for now we still take a square, but a more complex shape could be better.
@@ -46,8 +61,12 @@ def localStateFromGlobal(game_state, x, y, size=1):
                    range(x - size, x + size + 1), axis=2, mode='wrap')
 
 
-def rawRewards(game_states):
+def rawRewardsMetric(game_states):
     return np.array([game_states[i + 1][0] * game_states[i + 1][2] - game_states[i][0] * game_states[i][2]
+                     for i in range(len(game_states) - 1)])
+
+def rawRewards(game_states):
+    return np.array([0.0001*np.power(game_states[i + 1][0] * game_states[i + 1][2] - game_states[i][0] * game_states[i][2],4)
                      for i in range(len(game_states) - 1)])
 
 
@@ -68,7 +87,6 @@ def discountedReward(next_reward, move_before, strength_before, discount_factor=
             if d != -1:
                 dy = (-1 if d == NORTH else 1) if (d == SOUTH or d == NORTH) else 0
                 dx = (-1 if d == WEST else 1) if (d == WEST or d == EAST) else 0
-                discount_factor = discount_factor if (d != STILL or discount_factor == 1.0) else 0.9
                 reward[y][x] = discount_factor * take_value(next_reward, x + dx, y + dy) if strength_before[y][
                                                                                                 x] >= take_value(
                     strength_before, x + dx, y + dy) else 0
@@ -80,12 +98,12 @@ def discountedRewards(game_states, moves):
     raw_rewards = rawRewards(game_states)
     # strength_rewards = strengthRewards(game_states)
     discounted_rewards = np.zeros_like(raw_rewards, dtype=np.float64)
-    running_reward = np.zeros_like(raw_rewards[0])
+    running_reward = np.zeros_like(raw_rewards[0], dtype=np.float64)
     for t in reversed(range(0, len(raw_rewards))):
         running_reward = discountedReward(running_reward, moves[t], game_states[t][1],
-                                          discount_factor=0.2) + discountedReward(
+                                          discount_factor=0.6) + discountedReward(
             raw_rewards[t], moves[t], game_states[t][1])
-        discounted_rewards[t] = running_reward  # + 0.2*(moves[t]==STILL)*(game_states[t][2])
+        discounted_rewards[t] = running_reward
         ##TODO : HERE FOR STRENGTH ! INDEPENDENT
     return discounted_rewards
 

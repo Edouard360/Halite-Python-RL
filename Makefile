@@ -29,3 +29,7 @@ clear-agent:
 .PHONY: server
 server:
 	cd visualize;export FLASK_APP=visualize.py;flask run
+
+.PHONY: debug-server
+debug-server:
+	cd visualize;FLASK_APP=visualize.py FLASK_DEBUG=1 python -m flask run

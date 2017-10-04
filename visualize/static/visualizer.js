@@ -248,7 +248,12 @@ function showGame(game, $container, maxWidth, maxHeight, showmovement, isminimal
                 textPossess[a][b].position = new PIXI.Point(rw * (sX+0.5) , rh * (sY+0.5));
                 textPossess[a][b].style.fill = "#ffffff";
 
-                textReward[a][b] = new PIXI.Text(site.owner.toString(),sty)
+                var style_1 = new PIXI.TextStyle({
+                    fontFamily: 'Roboto',
+                    fontSize: 20
+                });
+
+                textReward[a][b] = new PIXI.Text(site.owner.toString(),style_1)
                 textReward[a][b].anchor = new PIXI.Point(0.5, 0.5);
                 textReward[a][b].position = new PIXI.Point(rw * (sX+0.5) , rh * (sY+0.5));
                 textReward[a][b].style.fill = "#ffffff";
@@ -257,6 +262,7 @@ function showGame(game, $container, maxWidth, maxHeight, showmovement, isminimal
                     fontFamily: 'Roboto',
                     fontSize: 10
                 });
+
                 for(var j = 0; j < 5; j++){
                     textPolicy[a][b][j] = new PIXI.Text(site.owner.toString(),style_2)
                     textPolicy[a][b][j].position = new PIXI.Point(rw * (sX+0.5) , rh * (sY+0.5));
@@ -537,7 +543,7 @@ function showGame(game, $container, maxWidth, maxHeight, showmovement, isminimal
                     textPossess[a][b].text = site.owner.toString()
                     textProd[a][b].style.fill = (site.owner.toString()=="1")?"#04e6f2":"#ffffff";
 
-                    textReward[a][b].text =(pressed[65] && discountedRewards!= undefined && frame!=lastFrame && site.owner.toString()=="1")?discountedRewards[frame][Math.floor(loc / game.width)][loc % game.width]:'';
+                    textReward[a][b].text =(pressed[65] && discountedRewards!= undefined && frame!=lastFrame && site.owner.toString()=="1")?discountedRewards[frame][Math.floor(loc / game.width)][loc % game.width].toPrecision(2):'';
 
 
                     //policies[a][b].text = policies[frame][a][b] In fact there are five...
@@ -633,7 +639,7 @@ function showGame(game, $container, maxWidth, maxHeight, showmovement, isminimal
                         textPolicy[y][x][i].text = (value == 0) ? '' : value.toString()
                     }
                     if(pressed[85]){//u pressed
-                        textReward[y][x].text =(discountedRewards!= undefined && frame!=lastFrame)?discountedRewards[frame][y][x]:'';
+                        textReward[y][x].text =(discountedRewards!= undefined && frame!=lastFrame)?discountedRewards[frame][y][x].toPrecision(2):'';
                     }
 
 
