@@ -219,6 +219,11 @@ function showGame(game, $container, maxWidth, maxHeight, showmovement, isminimal
         }
         loc=0
 
+        prodContainer.removeChildren()
+        strengthContainer.removeChildren()
+        possessContainer.removeChildren()
+        rewardContainer.removeChildren()
+        policyContainer.removeChildren()
         var sY = Math.round(yOffset);
         for(var a = 0; a < game.height; a++) {
             var sX = Math.round(xOffset);
@@ -280,43 +285,11 @@ function showGame(game, $container, maxWidth, maxHeight, showmovement, isminimal
             if(sY == game.height) sY = 0;
         }
 
-        // function postData(input) {
-        //     $.ajax({
-        //         type: "POST",
-        //         url: "http://127.0.0.1:5000/",//http://127.0.0.1:8080/reward.py
-        //         data: { param: input },
-        //         success: callbackFunc
-        //     });
-        // }
-
-        // function callbackFunc(response) {
-        //     // do something with the response
-        //     console.log(response);
-        // }
-
-        // postData('data to process');
-
-
-        // $.getJSON('/getpythondata', JSON.stringify(game), function(data) {
-        //     console.log(data)
-        // });
-       //  $.ajax({
-       //    type: "POST",
-       //    contentType: "application/json",
-       //    url: '/getpythondata',
-       //    data: { name: 'norm' },
-       //    dataType: "json"
-       // // });
-       //  $.post( "/getpythondata", {
-       //      javascript_data: data 
-       //  });
-
-
         stage.addChild(mapGraphics);
         //stage.addChild(prodContainer);
         //stage.addChild(strengthContainer);
         //stage.addChild(possessContainer);
-        //stage.addChild(rewardContainer);
+        stage.addChild(rewardContainer);
         stage.addChild(policyContainer);
         console.log(renderer.width, renderer.height);
     }
@@ -368,10 +341,10 @@ function showGame(game, $container, maxWidth, maxHeight, showmovement, isminimal
             if(frame >= game.num_frames - 1) frame = game.num_frames - 1;
             shouldplay = false;
         }
-        else if(e.keyCode == 65 || e.keyCode == 68 || e.keyCode == 87 || e.keyCode == 83) { //wasd
-            xOffset = Math.round(xOffset);
-            yOffset = Math.round(yOffset);
-        }
+        // else if(e.keyCode == 65 || e.keyCode == 68 || e.keyCode == 87 || e.keyCode == 83) { //wasd
+        //     xOffset = Math.round(xOffset);
+        //     yOffset = Math.round(yOffset);
+        // }
         else if(e.keyCode == 79) { //o
             xOffset = 0;
             yOffset = 0;
@@ -559,22 +532,20 @@ function showGame(game, $container, maxWidth, maxHeight, showmovement, isminimal
                     var site = game.frames[frame][Math.floor(loc / game.width)][loc % game.width];
                     if(site.strength == 255) mapGraphics.lineStyle(1, '0xfffff0');
                     if(site.strength != 0) mapGraphics.beginFill(game.players[site.owner].color);
+
                     textStr[a][b].text = site.strength.toString()
                     textPossess[a][b].text = site.owner.toString()
                     textProd[a][b].style.fill = (site.owner.toString()=="1")?"#04e6f2":"#ffffff";
 
-                    textReward[a][b].text =(discountedRewards!= undefined)?discountedRewards[frame][Math.floor(loc / game.width)][loc % game.width]:'';
+                    textReward[a][b].text =(pressed[65] && discountedRewards!= undefined && frame!=lastFrame && site.owner.toString()=="1")?discountedRewards[frame][Math.floor(loc / game.width)][loc % game.width]:'';
 
 
                     //policies[a][b].text = policies[frame][a][b] In fact there are five...
-                    var debug_direction = ["NORTH", "EAST", "SOUTH", "WEST", "STILL"]
+                    //var debug_direction = ["NORTH", "EAST", "SOUTH", "WEST", "STILL"]
                     for(var i = 0; i < 5; i++) {
-                        var value = (policies!= undefined)?policies[frame][a][b][i].toExponential(1):0
-                        textPolicy[a][b][i].text = (value==0)?'':value.toString()
-                        //textPolicy[a][b][i].text = (value==0)?'':debug_direction[i]
+                        //var value = (policies!= undefined)?policies[frame][a][b][i].toExponential(1):0
+                        textPolicy[a][b][i].text = '' //(value==0)?'':value.toString()
                     }
-
-
 
                     //console.log(discountedRewards[frame][Math.floor(loc / game.width)][loc % game.width])
                     var pw = rw * Math.sqrt(site.strength > 0 ? site.strength / 255 : 0.1) / 2
@@ -654,6 +625,18 @@ function showGame(game, $container, maxWidth, maxHeight, showmovement, isminimal
                     str = game.frames[frame][y][x].strength;
                     prod = game.productions[y][x];
                     infoText.text = 'Str: ' + str.toString() + ' | Prod: ' + prod.toString();
+
+                    //policies[a][b].text = policies[frame][a][b] In fact there are five...
+                    var debug_direction = ["NORTH", "EAST", "SOUTH", "WEST", "STILL"]
+                    for(var i = 0; i < 5; i++) {
+                        var value = (policies != undefined) ? policies[frame][y][x][i].toExponential(1) : 0
+                        textPolicy[y][x][i].text = (value == 0) ? '' : value.toString()
+                    }
+                    if(pressed[85]){//u pressed
+                        textReward[y][x].text =(discountedRewards!= undefined && frame!=lastFrame)?discountedRewards[frame][y][x]:'';
+                    }
+
+
                     if(frame < game.moves.length && game.frames[frame][y][x].owner != 0) {
                         move = game.moves[frame][y][x];
                         if(move >= 0 && move < 5) {
@@ -693,10 +676,10 @@ function showGame(game, $container, maxWidth, maxHeight, showmovement, isminimal
 
         //Pan if desired.
         const PAN_SPEED = 1;
-        if(pressed[65]) xOffset += PAN_SPEED;
-        if(pressed[68]) xOffset -= PAN_SPEED
-        if(pressed[87]) yOffset += PAN_SPEED;
-        if(pressed[83]) yOffset -= PAN_SPEED;
+        // if(pressed[65]) xOffset += PAN_SPEED;
+        // if(pressed[68]) xOffset -= PAN_SPEED
+        // if(pressed[87]) yOffset += PAN_SPEED;
+        // if(pressed[83]) yOffset -= PAN_SPEED;
 
         //Reset pan to be in normal bounds:
         if(Math.round(xOffset) >= game.width) xOffset -= game.width;

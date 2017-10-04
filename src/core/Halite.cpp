@@ -389,14 +389,18 @@ GameStatistics Halite::runGame(std::vector<std::string> * names_, unsigned int s
     stats.timeout_tags = timeout_tags;
     stats.timeout_log_filenames = std::vector<std::string>(timeout_tags.size());
     //Output gamefile. First try the replays folder; if that fails, just use the straight filename.
-    stats.output_filename = "Replays/" + std::to_string(id) + '-' + std::to_string(seed) + ".hlt";
+    stats.output_filename = "visualize/hlt/" + std::to_string(id) + '-' + std::to_string(seed) + ".hlt";
     if(!no_file_output){
         try {
             output(stats.output_filename);
         }
         catch(std::runtime_error & e) {
-            stats.output_filename = stats.output_filename.substr(8);
-            output(stats.output_filename);
+            try{
+                output("../"+stats.output_filename);
+            }catch(std::runtime_error & e){
+                stats.output_filename = stats.output_filename.substr(8);
+                output(stats.output_filename);
+            }
         }
 
         if(!quiet_output) std::cout << "Map seed was " << seed << std::endl << "Opening a file at " << stats.output_filename << std::endl;

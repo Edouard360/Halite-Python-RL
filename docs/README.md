@@ -1,3 +1,11 @@
+---
+title: Sidebar Navigation
+summary: "My man!"
+sidebar: mydoc_sidebar
+permalink: mydoc_sidebar_navigation.html
+folder: mydoc
+---
+
 # Documentation
 
 Go read the documentation [here](https://edouard360.github.io/Halite-Python-RL/).
@@ -29,3 +37,9 @@ Then either:
 Look at http://127.0.0.1:5000/performance.png for performance insights.
 
 Or at http://127.0.0.1:5000/ for games replay.
+
+## Working with PyCharm
+
+To run the Bot in Pycharm, you should provide a **mute** argument, since `MyBot.py` needs to know it's not on the Halite server, but running locally. 
+
+Go to edit configuration and add the script argument 2000 (It could be any other number).

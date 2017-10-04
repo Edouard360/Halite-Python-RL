@@ -11,6 +11,7 @@ class TrainedBot(Bot):
         s_size = 9 * 3;
         a_size = 5;
         h_size = 50
+        os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
         tf.reset_default_graph()
 
         with tf.device("/cpu:0"):
