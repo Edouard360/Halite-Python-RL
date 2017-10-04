@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/Edouard360/Halite-Python-RL.svg?branch=master)](https://travis-ci.org/Edouard360/Halite-Python-RL) [![Coverage Status](https://coveralls.io/repos/github/Edouard360/Halite-Python-RL/badge.svg?branch=master)](https://coveralls.io/github/Edouard360/Halite-Python-RL?branch=master) [![Documentation Status](https://readthedocs.org/projects/halite-python-rl/badge/?version=latest)](http://halite-python-rl.readthedocs.io/en/latest/?badge=latest)
+[![Build Status](https://travis-ci.org/Edouard360/Halite-Python-RL.svg?branch=master)](https://travis-ci.org/Edouard360/Halite-Python-RL) [![Coverage Status](https://coveralls.io/repos/github/Edouard360/Halite-Python-RL/badge.svg?branch=master)](https://coveralls.io/github/Edouard360/Halite-Python-RL?branch=master)
 
 # Halite-Python-RL
 
@@ -13,7 +13,7 @@
 
 ## Documentation
 
-The documentation is available <a href="http://halite-python-rl.readthedocs.io/en/latest/?badge=latest">here</a>.
+The documentation is available <a href="https://edouard360.github.io/Halite-Python-RL/">here</a>.
 
 ## Objective
 
