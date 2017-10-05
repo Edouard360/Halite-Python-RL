@@ -1,15 +1,23 @@
+"""
+Utility functions for test cases
+"""
 import json
 import urllib.request
+
 import numpy as np
 
 
-def game_states_from_url(GAME_URL):
+def game_states_from_url(game_url):
     """
     We host known games on aws server and we run the tests according to these games, from which we know the output
-    :param GAME_URL: The url of the game on the server (string).
-    :return:
+
+    Args:
+        game_url (basestring): The url of the game on the server (string).
+
+    Returns: game_states, moves
+
     """
-    game = json.loads(urllib.request.urlopen(GAME_URL).readline().decode("utf-8"))
+    game = json.loads(urllib.request.urlopen(game_url).readline().decode("utf-8"))
 
     owner_frames = np.array(game["frames"])[:, :, :, 0][:, np.newaxis, :, :]
     strength_frames = np.array(game["frames"])[:, :, :, 1][:, np.newaxis, :, :]

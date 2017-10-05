@@ -1,23 +1,31 @@
 """
 Tests the reward function
 """
+import unittest
 from train.reward import discount_rewards, rawRewards, allRewards
 from train.experience import ExperienceVanilla
 from train.worker import Worker
-import unittest
 
 import numpy as np
 from tests.util import game_states_from_url
 
 
 class TestReward(unittest.TestCase):
+    """
+    Test reward, exprience and worker
+    """
     def test_length_discount_rewards(self):
         self.assertTrue(len(discount_rewards(np.array([1]))) == 1)
         self.assertTrue(len(discount_rewards(np.array([1, 3]))) == 2)
 
     def test_reward(self):
-        GAME_URL = 'https://s3.eu-central-1.amazonaws.com/halite-python-rl/hlt-games/trained-bot.hlt'
-        game_states, moves = game_states_from_url(GAME_URL)
+        """
+        Tests rawRewards
+        Returns: test case
+
+        """
+        game_url = 'https://s3.eu-central-1.amazonaws.com/halite-python-rl/hlt-games/trained-bot.hlt'
+        game_states, moves = game_states_from_url(game_url)
 
         raw_rewards = rawRewards(game_states)
         self.assertTrue(len(raw_rewards) == len(game_states) - 1)
