@@ -207,13 +207,13 @@ function showGame(game, $container, maxWidth, maxHeight, showmovement, isminimal
         textPossess = new Array(game.height);
         textReward = new Array(game.height);
         textPolicy = new Array(game.height);
-        for (var i = 0; i < 10; i++) {
+        for (var i = 0; i < game.height; i++) {
             textProd[i] = new Array(game.width);
             textStr[i] = new Array(game.width);
             textPossess[i] = new Array(game.width);
             textReward[i] = new Array(game.width);
             textPolicy[i] = new Array(game.width);
-            for(var j = 0; j < 10; j++){
+            for(var j = 0; j < game.width; j++){
                 textPolicy[i][j] = new Array(5);
             }
         }
@@ -296,7 +296,7 @@ function showGame(game, $container, maxWidth, maxHeight, showmovement, isminimal
         //stage.addChild(strengthContainer);
         //stage.addChild(possessContainer);
         stage.addChild(rewardContainer);
-        stage.addChild(policyContainer);
+        //stage.addChild(policyContainer);
         console.log(renderer.width, renderer.height);
     }
     window.onresize();

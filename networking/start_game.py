@@ -40,17 +40,17 @@ def start_game(port=2000, width=10,height=10, max_strength=25, max_turn=25, max_
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("-p", "--port", type=int, help="the port for the simulation", default=2000)
-    parser.add_argument("-t", "--timeout", help="timeout", action="store_true", default=False)
+    parser.add_argument("-p", "--port", type=int, help="the port for the simulation - Useless if there are no pipe_players", default=2000)
+    parser.add_argument("-t", "--timeout", help="Doens't timeout if you set this flag is set", action="store_true", default=False)
     parser.add_argument("-j", "--silent", help="Doesn't print *.hlt file", action="store_true", default=False)
-    parser.add_argument("-q", "--quiet", help="quiet", action="store_true", default=False)
-    parser.add_argument("-s", "--strength", help="max strength", type=int, default=25)
-    parser.add_argument("-dw", "--width", help="max width", type=int, default=10)
-    parser.add_argument("-dh", "--height", help="max height", type=int, default=10)
-    parser.add_argument("-m", "--maxturn", help="max turn", type=int, default=25)
-    parser.add_argument("-g", "--maxgame", help="max game", type=int, default=1)  # -1 for infinite game
-    parser.add_argument("-pp", "--n_pipe_players", type=int, default=0)
-    parser.add_argument("-sp", "--slave_players", nargs='+', default=[])
+    parser.add_argument("-q", "--quiet", help="Doesn't output information to the console", action="store_true", default=False)
+    parser.add_argument("-s", "--strength", help="The max strength of the squares, if needed", type=int, default=25)
+    parser.add_argument("-dw", "--width", help="The width of the game", type=int, default=10)
+    parser.add_argument("-dh", "--height", help="The height of the game", type=int, default=10)
+    parser.add_argument("-m", "--maxturn", help="The total number of turns per game (maximum)", type=int, default=25)
+    parser.add_argument("-g", "--maxgame", help="The total number of games to play", type=int, default=1)  # -1 for infinite game
+    parser.add_argument("-pp", "--n_pipe_players",help="The number of pipe players. You need to handle these players yourself. Each of them has a port assigned.", type=int, default=0)
+    parser.add_argument("-sp", "--slave_players", help="The slave players. Handled by the halite.exe. You should write one of these two strings: 'MyBot.py' or 'OpponentBot.py' (multiple time if desired) ",nargs='+', default=[])
     args = parser.parse_args()
     start_game(port=args.port, width=args.width,height=args.height, max_strength=args.strength, max_turn=args.maxturn,
                silent_bool=args.silent, timeout=args.timeout, max_game=args.maxgame, quiet=args.quiet,

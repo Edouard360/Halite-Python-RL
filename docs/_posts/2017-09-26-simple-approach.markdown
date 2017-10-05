@@ -11,7 +11,7 @@ We will explain the rules of the game in this section, along with our strategy f
 
 <br>
 <p align="center">
-<img alt="conquermap" src="https://user-images.githubusercontent.com/15527397/30869334-20c1a650-a2e1-11e7-9c1b-9233640ccd01.gif" height="190" width="32%">
+<img alt="conquermap" height="220" width="220" src="https://user-images.githubusercontent.com/15527397/30869334-20c1a650-a2e1-11e7-9c1b-9233640ccd01.gif" >
 <br></p>
 
 
@@ -91,3 +91,4 @@ On the right, you can observe the behaviour of the original, untrained bot, with
 <img height="220" width="220" src="https://user-images.githubusercontent.com/15527397/30869385-3fd296e4-a2e1-11e7-81f7-3a9436740792.gif">
 <img height="220" width="220" src="https://user-images.githubusercontent.com/15527397/30869390-41fe0d22-a2e1-11e7-9205-88fd2c47a544.gif">
 </p>
+

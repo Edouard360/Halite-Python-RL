@@ -9,17 +9,21 @@ title:  "First Steps"
 
 In your console:
 
-`cd networking python start_game.py`
+`cd networking; python start_game.py`
 
 In another tab
 
-`cd public python MyBot.py`
+`cd public; python MyBot.py`
 
 This will run 1 game. Options can be added to starting the game, among which:
 
 `python start_game.py -g 5 -x 30 -z 50`
 
 Will run 5 games, of at most 30 turns, which at most squares of strength 50.
+
+All the options available for start_game might by listed (_with a clear description_) using the -h flag:
+
+`python start_game.py -h`
 
 ## Visualize the Bot
 

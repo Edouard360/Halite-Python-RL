@@ -25,8 +25,8 @@ with tf.device("/cpu:0"):
         master_experience = ExperienceVanilla()
         master_agent = VanillaAgent(master_experience, lr, s_size, a_size, h_size)
 
-    num_workers = 1  # multiprocessing.cpu_count()# (2)  Maybe set max number of workers / number of available CPU threads
-    n_simultations = 15
+    num_workers = 5  # multiprocessing.cpu_count()# (2)  Maybe set max number of workers / number of available CPU threads
+    n_simultations = 500
 
     workers = []
     if num_workers > 1:
