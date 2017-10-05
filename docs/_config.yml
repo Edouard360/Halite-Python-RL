@@ -1,0 +1,14 @@
+# Setup
+theme: jekyll-theme-cayman
+
+title:        Halite Challenge
+tagline:      A data science project
+
+author:
+  name:       Edouard Mehlman
+  url:        edouard.mehlman@polytechnique.edu
+
+collections:
+  documentation:
+    output: true
+    permalink: /:collection/:name # This is just display
