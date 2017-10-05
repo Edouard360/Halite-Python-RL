@@ -7,10 +7,11 @@ import os
 
 class TrainedBot(Bot):
     def __init__(self):
-        lr = 1e-3;
+        lr = 5*1e-3;
         s_size = 9 * 3;
         a_size = 5;
         h_size = 50
+        os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
         tf.reset_default_graph()
 
         with tf.device("/cpu:0"):
@@ -31,7 +32,11 @@ class TrainedBot(Bot):
 
     def compute_moves(self, game_map):
         game_state = getGameState(game_map, self.myID)
-        return formatMoves(game_map, self.agent.choose_actions(self.sess, game_state))
+        return formatMoves(game_map, self.agent.choose_actions(self.sess, game_state, debug=True))
+
+    def get_policies(self, game_state):
+        # Warning this is not hereditary
+        return self.agent.get_policies(self.sess, game_state)
 
     def close(self):
         self.sess.close()

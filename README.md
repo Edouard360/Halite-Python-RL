@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/Edouard360/Halite-Python-RL.svg?branch=master)](https://travis-ci.org/Edouard360/Halite-Python-RL) [![Coverage Status](https://coveralls.io/repos/github/Edouard360/Halite-Python-RL/badge.svg?branch=master)](https://coveralls.io/github/Edouard360/Halite-Python-RL?branch=master) [![Documentation Status](https://readthedocs.org/projects/halite-python-rl/badge/?version=latest)](http://halite-python-rl.readthedocs.io/en/latest/?badge=latest)
+[![Build Status](https://travis-ci.org/Edouard360/Halite-Python-RL.svg?branch=master)](https://travis-ci.org/Edouard360/Halite-Python-RL) [![Coverage Status](https://coveralls.io/repos/github/Edouard360/Halite-Python-RL/badge.svg?branch=master)](https://coveralls.io/github/Edouard360/Halite-Python-RL?branch=master)
 
 # Halite-Python-RL
 
@@ -10,6 +10,10 @@
 ## Description 
 
 <a href="https://halite.io/">Halite</a> is an open source artificial intelligence programming challenge, created by <a href="https://www.twosigma.com/">Two Sigma</a>, where players build bots using the coding language of their choice to battle on a two-dimensional virtual board. The last bot standing or the bot with all the territory wins. Victory will require micromanaging of the movement of pieces, optimizing a bot’s combat ability, and braving a branching factor billions of times higher than that of Go.
+
+## Documentation
+
+The documentation is available <a href="https://edouard360.github.io/Halite-Python-RL/">here</a>.
 
 ## Objective
 

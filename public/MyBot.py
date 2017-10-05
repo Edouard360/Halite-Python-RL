@@ -1,9 +1,10 @@
 import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 mode = 'server' if (len(sys.argv) == 1) else 'local'
-mode = 'local'  # TODO remove forcing
 
-if mode == 'server':  # 'server' mode
+if mode == 'server' or sys.argv[1]=='slave':  # 'server' mode
     import hlt
 else:  # 'local' mode
     import context
