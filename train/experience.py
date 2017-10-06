@@ -3,7 +3,7 @@ Experience class definition
 """
 import numpy as np
 
-from train.reward import allRewards, rawRewardsMetric
+from train.reward import all_rewards_function, raw_rewards_metric
 
 
 class Experience:
@@ -24,7 +24,7 @@ class Experience:
         pass
 
     def compute_metric(self, game_states):
-        production_increments = np.sum(np.sum(rawRewardsMetric(game_states), axis=2), axis=1)
+        production_increments = np.sum(np.sum(raw_rewards_metric(game_states), axis=2), axis=1)
         self.metric = np.append(self.metric, production_increments.dot(np.linspace(2.0, 1.0, num=len(game_states) - 1)))
 
     def save_metric(self, name):
@@ -42,7 +42,7 @@ class ExperienceVanilla(Experience):
 
     def add_episode(self, game_states, moves):
         self.compute_metric(game_states)
-        all_states, all_moves, all_rewards = allRewards(game_states, moves)
+        all_states, all_moves, all_rewards = all_rewards_function(game_states, moves)
 
         self.states = np.concatenate((self.states, all_states.reshape(-1, 27)), axis=0)
         self.moves = np.concatenate((self.moves, all_moves))
