@@ -553,7 +553,7 @@ function showGame(game, $container, maxWidth, maxHeight, showmovement, isminimal
                         textPolicy[a][b][i].text = '' //(value==0)?'':value.toString()
                     }
 
-                    //console.log(discountedRewards[frame][Math.floor(loc / game.width)][loc % game.width])
+                    //console.log(discounted_rewards_function[frame][Math.floor(loc / game.width)][loc % game.width])
                     var pw = rw * Math.sqrt(site.strength > 0 ? site.strength / 255 : 0.1) / 2
                     var ph = rh * Math.sqrt(site.strength > 0 ? site.strength / 255 : 0.1) / 2;
                     var direction = frame < game.moves.length ? game.moves[frame][Math.floor(loc / game.width)][loc % game.width] : 0;

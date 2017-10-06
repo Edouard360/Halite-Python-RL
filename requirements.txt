@@ -3,5 +3,5 @@ coverage>=3.6
 pytest-cov
 pytest-xdist
 coveralls
-pylint
+pylint>=1.6
 flask

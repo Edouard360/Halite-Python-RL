@@ -1,38 +1,40 @@
+"""The HLT class to handle the connection"""
 import socket
 
 from public.hlt import GameMap, translate_cardinal
 
 
 class HLT:
+    """The HLT class to handle the connection"""
     def __init__(self, port):
-        _connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        _connection.connect(('localhost', port))
+        connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        connection.connect(('localhost', port))
         print('Connected to intermediary on port #' + str(port))
-        self._connection = _connection
+        self.connection = connection
 
     def get_string(self):
-        newString = ""
+        new_string = ""
         buffer = '\0'
         while True:
-            buffer = self._connection.recv(1).decode('ascii')
+            buffer = self.connection.recv(1).decode('ascii')
             if buffer != '\n':
-                newString += str(buffer)
+                new_string += str(buffer)
             else:
-                return newString
+                return new_string
 
-    def sendString(self, s):
+    def send_string(self, s):
         s += '\n'
-        self._connection.sendall(bytes(s, 'ascii'))
+        self.connection.sendall(bytes(s, 'ascii'))
 
     def get_init(self):
-        myID = int(self.get_string())
+        my_id = int(self.get_string())
         game_map = GameMap(self.get_string(), self.get_string(), self.get_string())
-        return myID, game_map
+        return my_id, game_map
 
     def send_init(self, name):
-        self.sendString(name)
+        self.send_string(name)
 
     def send_frame(self, moves):
-        self.sendString(' '.join(
+        self.send_string(' '.join(
             str(move.square.x) + ' ' + str(move.square.y) + ' ' + str(translate_cardinal(move.direction)) for move in
             moves))
