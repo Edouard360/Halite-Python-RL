@@ -6,7 +6,7 @@ from io import BytesIO
 
 import numpy as np
 import pandas as pd
-from flask import Flask, render_template, request, make_response
+from flask import Flask, render_template, request, make_response, send_from_directory
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
@@ -14,20 +14,45 @@ from matplotlib.figure import Figure
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 try:
     from train.reward import discounted_rewards_function
-    from public.models.bot.trainedBot import TrainedBot
+    from public.models.bot.TrainedBot import TrainedBot
 except:
     raise
 
 app = Flask(__name__)
 
+hlt_root = os.path.join(app.root_path, 'hlt')
+@app.route('/hlt/<path:path>')
+def send_hlt(path):
+    return send_from_directory('hlt', path)
 
 @app.route("/")
 def home():
-    return render_template('visualizer.html')
+    return render_template('visualizer.html',tree=make_tree(hlt_root))
 
+@app.route("/performance.html")
+def performance():
+    """
+    Return the page for the performance
+    :return:
+    """
+    return render_template('performance.html')
 
-print("Look at http://127.0.0.1:5000/performance.png for performance insights")
-
+def make_tree(path):
+    tree = dict(name=os.path.basename(path), children=[])
+    try:
+        lst = os.listdir(path)
+    except OSError:
+        pass
+    else:
+        for name in lst:
+            fn = os.path.join(path, name)
+            if os.path.isdir(fn):
+                tree['children'].append(make_tree(fn))
+            else:
+                if name != ".DS_Store":
+                    tree['children'].append(dict(path='hlt/'+name,name=name))
+                print(np)
+    return tree
 
 @app.route("/performance.png")
 def performance_plot():
@@ -91,7 +116,7 @@ def convert(r):
 def post_discounted_rewards():
     game_states, moves = convert(request)
     discounted_rewards = discounted_rewards_function(game_states, moves)
-    return json.dumps({'discounted_rewards_function': discounted_rewards.tolist()})
+    return json.dumps({'discounted_rewards': discounted_rewards.tolist()})
 
 
 @app.route('/post_policies', methods=['POST'])

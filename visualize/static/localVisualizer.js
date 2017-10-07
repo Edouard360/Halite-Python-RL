@@ -31,4 +31,35 @@ $(function () {
         var files = e.target.files
         handleFiles(files)
     });
+
+    $("li").on("click",function() {
+        $.ajax({
+            type:    "GET",
+            url:     this.id,
+            success: function(text) {
+                $("#displayArea").empty();
+                var fsHeight = $("#fileSelect").outerHeight();
+                showGame(textToGame(text, "OK"), $("#displayArea"), null, -fsHeight, true, false, true);
+                // `text` is the file text
+            },
+            error:   function() {
+                // An error occurred
+            }
+        });
+    });
+    if($("li").length>=1){
+        $.ajax({
+            type:    "GET",
+            url:     $("li")[$("li").length-1].id,
+            success: function(text) {
+                $("#displayArea").empty();
+                var fsHeight = $("#fileSelect").outerHeight();
+                showGame(textToGame(text, "OK"), $("#displayArea"), null, -fsHeight, true, false, true);
+                // `text` is the file text
+            },
+            error:   function() {
+                // An error occurred
+            }
+        });
+    }
 })

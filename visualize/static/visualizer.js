@@ -84,7 +84,7 @@ function showGame(game, $container, maxWidth, maxHeight, showmovement, isminimal
         type: "POST",
         url: '/post_discounted_rewards',
         data: JSON.stringify(game),
-        success: function(data) {discountedRewards = JSON.parse(data)['discountedRewards']},
+        success: function(data) {discountedRewards = JSON.parse(data)['discounte_rewards']},
         contentType: "application/json; charset=utf-8",
         //dataType: "json"
     })
@@ -296,7 +296,7 @@ function showGame(game, $container, maxWidth, maxHeight, showmovement, isminimal
         //stage.addChild(strengthContainer);
         //stage.addChild(possessContainer);
         stage.addChild(rewardContainer);
-        //stage.addChild(policyContainer);
+        stage.addChild(policyContainer);
         console.log(renderer.width, renderer.height);
     }
     window.onresize();
