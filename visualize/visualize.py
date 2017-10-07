@@ -21,13 +21,17 @@ except:
 app = Flask(__name__)
 
 hlt_root = os.path.join(app.root_path, 'hlt')
+
+
 @app.route('/hlt/<path:path>')
 def send_hlt(path):
     return send_from_directory('hlt', path)
 
+
 @app.route("/")
 def home():
-    return render_template('visualizer.html',tree=make_tree(hlt_root))
+    return render_template('visualizer.html', tree=make_tree(hlt_root))
+
 
 @app.route("/performance.html")
 def performance():
@@ -37,7 +41,12 @@ def performance():
     """
     return render_template('performance.html')
 
+
 def make_tree(path):
+    """
+    For finding the halite file, we provide their directory tree.
+    :return:
+    """
     tree = dict(name=os.path.basename(path), children=[])
     try:
         lst = os.listdir(path)
@@ -50,9 +59,10 @@ def make_tree(path):
                 tree['children'].append(make_tree(fn))
             else:
                 if name != ".DS_Store":
-                    tree['children'].append(dict(path='hlt/'+name,name=name))
+                    tree['children'].append(dict(path='hlt/' + name, name=name))
                 print(np)
     return tree
+
 
 @app.route("/performance.png")
 def performance_plot():
@@ -90,6 +100,7 @@ def convert(r):
     :param r:
     :return:
     """
+
     def get_owner(square):
         return square['owner']
 
