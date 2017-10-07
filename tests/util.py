@@ -1,4 +1,5 @@
 """Importing the game from aws"""
+import os
 import json
 import urllib.request
 import numpy as np
@@ -10,7 +11,14 @@ def game_states_from_url(game_url):
     :param game_url: The url of the game on the server (string).
     :return:
     """
-    game = json.loads(urllib.request.urlopen(game_url).readline().decode("utf-8"))
+    return text_to_game(urllib.request.urlopen(game_url).readline().decode("utf-8"))
+
+
+def text_to_game(text):
+    """
+    Transform the text from the *.hlt files into game_states
+    """
+    game = json.loads(text)
 
     owner_frames = np.array(game["frames"])[:, :, :, 0][:, np.newaxis, :, :]
     strength_frames = np.array(game["frames"])[:, :, :, 1][:, np.newaxis, :, :]
@@ -20,3 +28,11 @@ def game_states_from_url(game_url):
 
     game_states = np.concatenate(([owner_frames, strength_frames, production_frames]), axis=1)
     return game_states, moves
+
+
+def game_states_from_file(filepath=None):
+    path_to_hlt = 'visualize/hlt/' if filepath is None else filepath  # 'visualize/hlt/'
+
+    hlt_files = [hlt_file for hlt_file in os.listdir(path_to_hlt) if hlt_file != '.DS_Store']
+    filepath = hlt_files[0]
+    return text_to_game(open(path_to_hlt + filepath).read())
