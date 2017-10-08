@@ -23,9 +23,7 @@ install:
 script:
   # Tests
   - python -m unittest discover -v
-  # Style checks
-  # Temporary workaround
-  - for i in `cat pylint_checks.txt` ; do pylint $i ;done
+  - find . -iname "*.py" | xargs pylint
 
   # Coverage checks
   - py.test --cov=train tests/

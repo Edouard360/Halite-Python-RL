@@ -1,3 +1,4 @@
+"""The original but corrected hlt.py file for communication with halite."""
 import sys
 from collections import namedtuple
 from itertools import chain, zip_longest
@@ -24,6 +25,8 @@ Move = namedtuple('Move', 'square direction')
 
 
 class GameMap:
+    """The GameMap on which to play."""
+
     def __init__(self, size_string, production_string, map_string=None):
         self.width, self.height = tuple(map(int, size_string.split()))
         self.production = tuple(
@@ -57,12 +60,14 @@ class GameMap:
         return chain.from_iterable(self.contents)
 
     def neighbors(self, square, n=1, include_self=False):
-        "Iterable over the n-distance neighbors of a given square.  For single-step neighbors, the enumeration index provides the direction associated with the neighbor."
+        """Iterable over the n-distance neighbors of a given square.
+        For single-step neighbors, the enumeration index provides
+        the direction associated with the neighbor.
+        """
         assert isinstance(include_self, bool)
         assert isinstance(n, int) and n > 0
         if n == 1:
-            combos = ((0, -1), (1, 0), (0, 1), (-1, 0), (0,
-                                                         0))  # NORTH, EAST, SOUTH, WEST, STILL ... matches indices provided by enumerate(game_map.neighbors(square))
+            combos = ((0, -1), (1, 0), (0, 1), (-1, 0), (0, 0))
         else:
             combos = ((dx, dy) for dy in range(-n, n + 1) for dx in range(-n, n + 1) if abs(dx) + abs(dy) <= n)
         return (self.contents[(square.y + dy) % self.height][(square.x + dx) % self.width] for dx, dy in combos if
@@ -96,9 +101,9 @@ def get_string():
 
 
 def get_init():
-    playerID = int(get_string())
+    player_id = int(get_string())
     m = GameMap(get_string(), get_string())
-    return playerID, m
+    return player_id, m
 
 
 def send_init(name):
@@ -106,7 +111,7 @@ def send_init(name):
 
 
 def translate_cardinal(direction):
-    "Translate direction constants used by this Python-based bot framework to that used by the official Halite game environment."
+    "Beware the direction are changed! Important for visualization"
     return (direction + 1) % 5
 
 
