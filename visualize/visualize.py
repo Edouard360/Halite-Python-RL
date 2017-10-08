@@ -4,17 +4,20 @@ import os
 import sys
 from io import BytesIO
 
-import numpy as np
-import pandas as pd
-from flask import Flask, render_template, request, make_response, send_from_directory
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
+import numpy as np
+import pandas as pd
+from flask import Flask, render_template, request, make_response, send_from_directory
+
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 try:
-    from train.reward import discounted_rewards_function
+    from train.reward.reward import Reward
+    from public.state.state import State1
     from public.models.bot.TrainedBot import TrainedBot
+    from public.models.agent.VanillaAgent import VanillaAgent
 except:
     raise
 
@@ -58,7 +61,7 @@ def make_tree(path):
             if os.path.isdir(fn):
                 tree['children'].append(make_tree(fn))
             else:
-                if name != ".DS_Store":
+                if name not in [".DS_Store", "README.md"]:
                     tree['children'].append(dict(path='hlt/' + name, name=name))
                 print(np)
     return tree
@@ -126,13 +129,14 @@ def convert(r):
 @app.route('/post_discounted_rewards', methods=['POST'])
 def post_discounted_rewards():
     game_states, moves = convert(request)
-    discounted_rewards = discounted_rewards_function(game_states, moves)
+    r = Reward(State1(scope=2))
+    discounted_rewards = r.discounted_rewards_function(game_states, moves)
     return json.dumps({'discounted_rewards': discounted_rewards.tolist()})
 
 
 @app.route('/post_policies', methods=['POST'])
 def post_policies():
     game_states, _ = convert(request)
-    bot = TrainedBot()
+    bot = TrainedBot(VanillaAgent, State1(scope=2))
     policies = np.array([bot.get_policies(game_state) for game_state in game_states])
     return json.dumps({'policies': policies.tolist()})

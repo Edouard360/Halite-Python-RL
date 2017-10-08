@@ -1,39 +1,42 @@
 """This main.py file runs the training."""
-import threading
 import os
 import sys
-import tensorflow as tf
+import threading
 
-from public.models.agent.VanillaAgent import VanillaAgent
-from train.experience import ExperienceVanilla
-from train.worker import Worker
+import tensorflow as tf
+from tensorflow.python.framework.errors_impl import InvalidArgumentError
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
+try:
+    from public.models.agent.VanillaAgent import VanillaAgent
+    from public.state.state import State1
+    from train.experience import ExperienceVanilla
+    from train.worker import Worker
+    from train.reward.reward import Reward
+except:
+    raise
 
 port = int(sys.argv[1]) if len(sys.argv) > 1 else 2000
 
 tf.reset_default_graph()  # Clear the Tensorflow graph.
 
 with tf.device("/cpu:0"):
-    lr = 1e-3
-    s_size = 9 * 3
-    a_size = 5
-    h_size = 50
-
     with tf.variable_scope('global'):
-        master_experience = ExperienceVanilla()
-        master_agent = VanillaAgent(master_experience, lr, s_size, a_size, h_size)
+        state = State1(scope=2)
+        master_experience = ExperienceVanilla(Reward(state))
+        master_agent = VanillaAgent(state, master_experience)
 
-    num_workers = 5
-    n_simultations = 500
+    num_workers = 8
+    n_simultations = 5000
 
     workers = []
     if num_workers > 1:
         for i in range(num_workers):
             with tf.variable_scope('worker_' + str(i)):
-                workers.append(Worker(port, i, VanillaAgent(ExperienceVanilla(), lr, s_size, a_size, h_size)))
+                state = State1(scope=2)
+                experience = ExperienceVanilla(Reward(state))
+                workers.append(Worker(port, i, VanillaAgent(state, experience)))
     else:
         workers.append(Worker(port, 0, master_agent))
     # We need only to save the global
@@ -47,7 +50,7 @@ with tf.Session() as sess:
     try:
         saver.restore(sess, os.path.abspath(
             os.path.dirname(__file__)) + '/../public/models/variables/' + master_agent.name + '/' + master_agent.name)
-    except FileNotFoundError:
+    except InvalidArgumentError:
         print("Model not found - initiating new one")
 
     coord = tf.train.Coordinator()

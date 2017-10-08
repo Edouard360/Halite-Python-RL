@@ -3,7 +3,7 @@ Experience class definition
 """
 import numpy as np
 
-from train.reward import all_rewards_function, raw_rewards_metric
+from train.reward.util import production_increments_function
 
 
 class Experience:
@@ -24,7 +24,7 @@ class Experience:
         pass
 
     def compute_metric(self, game_states):
-        production_increments = np.sum(np.sum(raw_rewards_metric(game_states), axis=2), axis=1)
+        production_increments = production_increments_function(game_states)
         self.metric = np.append(self.metric, production_increments.dot(np.linspace(2.0, 1.0, num=len(game_states) - 1)))
 
     def save_metric(self, name):
@@ -36,15 +36,16 @@ class ExperienceVanilla(Experience):
     Stores states in addition to the inherited attributes of Experience
     """
 
-    def __init__(self):
+    def __init__(self, reward):
         super(ExperienceVanilla, self).__init__()
-        self.states = np.array([]).reshape(0, 27)
+        self.reward = reward
+        self.states = np.array([]).reshape(0, self.reward.state.local_size)
 
     def add_episode(self, game_states, moves):
         self.compute_metric(game_states)
-        all_states, all_moves, all_rewards = all_rewards_function(game_states, moves)
+        all_states, all_moves, all_rewards = self.reward.all_rewards_function(game_states, moves)
 
-        self.states = np.concatenate((self.states, all_states.reshape(-1, 27)), axis=0)
+        self.states = np.concatenate((self.states, all_states.reshape(-1, self.reward.state.local_size)), axis=0)
         self.moves = np.concatenate((self.moves, all_moves))
         self.rewards = np.concatenate((self.rewards, all_rewards))
 

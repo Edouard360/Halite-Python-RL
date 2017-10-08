@@ -1,18 +1,22 @@
 """The Vanilla Agent"""
+
 import numpy as np
 import tensorflow as tf
 import tensorflow.contrib.slim as slim
 
 from public.models.agent.Agent import Agent
+from public.util.dijkstra import build_graph_from_state, dijkstra
+from public.util.path import move_to, path_to
 
 
 class VanillaAgent(Agent):
     """The Vanilla Agent"""
-    def __init__(self, experience=None, lr=1e-2, s_size=9 * 3, a_size=5, h_size=50):  # all these are optional ?
-        super(VanillaAgent, self).__init__('vanilla-cin', experience)
+
+    def __init__(self, state, experience=None, lr=1e-4, a_size=5, h_size=200):  # all these are optional ?
+        super(VanillaAgent, self).__init__('vanilla-debug', state, experience)
 
         # These lines established the feed-forward part of the network. The agent takes a state and produces an action.
-        self.state_in = tf.placeholder(shape=[None, s_size], dtype=tf.float32)
+        self.state_in = tf.placeholder(shape=[None, state.local_size], dtype=tf.float32)
 
         hidden = slim.fully_connected(self.state_in, h_size, activation_fn=tf.nn.relu)
 
@@ -45,22 +49,56 @@ class VanillaAgent(Agent):
     def get_policy(self, sess, state):
         return sess.run(self.policy, feed_dict={self.state_in: [state.reshape(-1)]})
 
-    def choose_action(self, sess, state, frac_progress=1.0, debug=False):  # it only a state, not the game state...
+    def get_policies(self, sess, game_state):
+        policies = np.zeros(game_state[0].shape + (5,))
+        for (y, x), k in np.ndenumerate(game_state[0]):
+            if k == 1:
+                policies[y][x] = self.get_policy(sess, self.state.get_local_and_normalize(game_state, x, y))
+        return policies
+
+    def choose_action(self, sess, state, train=True):
         # Here the state is normalized !
-        if np.random.uniform() >= frac_progress:
-            a = np.random.choice(range(5))
-        else:
+        if train:  # keep randomness
             a_dist = sess.run(self.policy, feed_dict={self.state_in: [state.reshape(-1)]})
             a = np.random.choice(a_dist[0], p=a_dist[0])
             a = np.argmax(a_dist == a)
-        if debug:
+        else:  # act greedily
             a = sess.run(self.predict, feed_dict={self.state_in: [state.reshape(-1)]})
         return a
 
+    def choose_actions(self, sess, game_state, train=True):
+        """Choose all actions using one call to tensorflow"""
+        g = build_graph_from_state(game_state[0])
+        dist_dict, closest_dict = dijkstra(g.g, 0)
+        all_game_state_n = np.array([]).reshape(0, self.state.local_size)
+        moves = np.zeros_like(game_state[0], dtype=np.int64) - 1
+        moves_2 = np.zeros_like(game_state[0], dtype=np.int64) - 1
+        moves_where = []
+        for (y, x), k in np.ndenumerate(game_state[0]):
+            if k == 1:
+                if (y, x) in dist_dict and dist_dict[(y, x)] in [1, 2]:
+                    moves_where += [(y, x)]
+                    game_state_n = self.state.get_local_and_normalize(game_state, x, y).reshape(1,
+                                                                                                self.state.local_size)
+                    all_game_state_n = np.concatenate((all_game_state_n, game_state_n), axis=0)
+                else:
+                    if game_state[1][y][x] > 10:  # Set a minimum strength
+                        y_t, x_t = y, x
+                        y_t, x_t = closest_dict[(y_t, x_t)]
+                        # while closest_dict[(y_t,x_t)]!=0: Pbbly unnecessary
+                        #     y_t, x_t = closest_dict[(y_t, x_t)]
+                        moves_2[y][x] = move_to(path_to((x, y), (x_t, y_t), len(game_state[0][0]), len(game_state[0])))
+        if train:
+            actions = sess.run(self.policy, feed_dict={self.state_in: all_game_state_n})
+            actions = [np.argmax(action == np.random.choice(action, p=action)) for action in actions]
+        else:
+            actions = sess.run(self.predict, feed_dict={self.state_in: all_game_state_n})
+        for (y, x), d in zip(moves_where, actions):
+            moves[y][x] = d
+        return moves, moves_2
+
     def update_agent(self, sess):
-        # batch_size = min(int(len(self.moves)/2),128) # Batch size
-        # indices = np.random.randint(len(self.moves)-1, size=batch_size)
-        states, moves, rewards = self.experience.batch(512)
+        states, moves, rewards = self.experience.batch()
 
         feed_dict = {self.state_in: states,
                      self.action_holder: moves,

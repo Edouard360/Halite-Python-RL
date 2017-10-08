@@ -119,3 +119,17 @@ def send_frame(moves):
     send_string(' '.join(
         str(move.square.x) + ' ' + str(move.square.y) + ' ' + str(translate_cardinal(move.direction)) for move in
         moves))
+
+
+def send_frame_custom(moves):
+    send_string(' '.join(
+        str(x) + ' ' + str(y) + ' ' + str(translate_cardinal(direction)) for (x, y), direction in moves))
+
+
+def format_moves(game_map, moves):
+    moves_to_send = []
+    for y in range(len(game_map.contents)):
+        for x in range(len(game_map.contents[0])):
+            if moves[y][x] != -1:
+                moves_to_send += [Move(game_map.contents[y][x], moves[y][x])]
+    return moves_to_send

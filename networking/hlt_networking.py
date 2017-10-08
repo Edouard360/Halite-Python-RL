@@ -6,6 +6,7 @@ from public.hlt import GameMap, translate_cardinal
 
 class HLT:
     """The HLT class to handle the connection"""
+
     def __init__(self, port):
         connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         connection.connect(('localhost', port))
@@ -38,3 +39,7 @@ class HLT:
         self.send_string(' '.join(
             str(move.square.x) + ' ' + str(move.square.y) + ' ' + str(translate_cardinal(move.direction)) for move in
             moves))
+
+    def send_frame_custom(self, moves):
+        self.send_string(' '.join(
+            str(x) + ' ' + str(y) + ' ' + str(translate_cardinal(direction)) for (x, y), direction in moves))

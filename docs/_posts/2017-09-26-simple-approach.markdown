@@ -1,7 +1,7 @@
 ---
 layout: default
 title:  "A simple approach"
-date:   2016-02-12 17:50:00
+date:   2017-09-26 17:50:00
 categories: main
 ---
 

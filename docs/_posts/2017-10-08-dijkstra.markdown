@@ -1,0 +1,52 @@
+---
+layout: default
+title:  "The dijkstra algorithm"
+date:   2017-10-08 16:30:00
+categories: main
+---
+
+<style type="text/css">
+  {% include center.css %}
+</style>
+
+# The Dijsktra algorithm
+
+## The power of Dijsktra
+
+We had dealt with the problem of border squares, learning with a neural network.
+
+Dijsktra algorithm, which runs here in linear time, gives us the ability  
+
+## Our currently trained vanilla model
+
+Trained for 3h with 8 workers, each simulating 2500 games. The batch_size was 128.
+
+Every worker would update his agent - and then the global agent - after each game / episode is played.
+
+```
+self.agent.experience.add_episode(game_states, moves)
+self.agent.update_agent(sess)
+```
+
+Parameters:
+
+```
+lr=1e-3, a_size=5, h_size=50
+```
+
+The main features of the reward function were the following:
+
+```
+np.array([np.power(get_prod(game_states[i + 1]) - get_prod(game_states[i]),1)
+             for i in range(len(game_states) - 1)])
+...
+discount_factor=0.6
+...
+discounted_rewards[t] = running_reward - 0.1
+```
+
+And finally the chosen state was:
+
+```
+State1(scope=2)
+```

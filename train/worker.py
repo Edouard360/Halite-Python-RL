@@ -1,13 +1,15 @@
 """The worker class for training and parallel operations"""
 import multiprocessing
-import time
 import os
+import time
 
 import tensorflow as tf
 
-from train.reward import format_moves, get_game_state
-from networking.start_game import start_game
 from networking.hlt_networking import HLT
+from networking.start_game import start_game
+from public.hlt import format_moves
+from public.state.state import get_game_state
+
 
 def update_target_graph(from_scope, to_scope):
     from_vars = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, from_scope)
@@ -24,19 +26,21 @@ class Worker():
     The Worker class for training. Each worker has an individual port, number, and agent.
     Each of them work with the global session, and use the global saver.
     """
+
     def __init__(self, port, number, agent):
         self.name = 'worker_' + str(number)
         self.number = number
         self.port = port + number
 
         def worker():
-            start_game(self.port, quiet=True, max_game=-1)  # Infinite games
+            start_game(self.port, quiet=True, max_game=-1, width=25, height=25, max_turn=50,
+                       max_strength=60)  # Infinite games
 
         self.p = multiprocessing.Process(target=worker)
         self.p.start()
         time.sleep(1)
 
-        self.hlt = HLT(port=self.port) # Launching the pipe operation
+        self.hlt = HLT(port=self.port)  # Launching the pipe operation
         self.agent = agent
 
         self.update_local_ops = update_target_graph('global', self.name)
@@ -67,8 +71,9 @@ class Worker():
                 while self.hlt.get_string() == 'Get map and play!':
                     game_map.get_frame(self.hlt.get_string())
                     game_states += [get_game_state(game_map, my_id)]
-                    moves += [self.agent.choose_actions(sess, game_states[-1])]
-                    self.hlt.send_frame(format_moves(game_map, moves[-1]))
+                    moves1, moves2 = self.agent.choose_actions(sess, game_states[-1])
+                    moves += [moves1]  # We only train on this
+                    self.hlt.send_frame(format_moves(game_map, -(moves1 * moves2)))
 
                 self.agent.experience.add_episode(game_states, moves)
                 self.agent.update_agent(sess)

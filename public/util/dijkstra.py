@@ -124,7 +124,7 @@ class Graph:
                 self.remove_node((i, j))
 
 
-def build_graph_from_state(state):
+def build_graph_from_state(state): # The keys will be y, x, since we np.ndenumerate
     """Build the graph from the state"""
     def take(state, i, j):
         return np.take(np.take(state, j, axis=1, mode='wrap'), i, axis=0, mode='wrap')

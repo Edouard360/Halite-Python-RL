@@ -84,7 +84,7 @@ function showGame(game, $container, maxWidth, maxHeight, showmovement, isminimal
         type: "POST",
         url: '/post_discounted_rewards',
         data: JSON.stringify(game),
-        success: function(data) {discountedRewards = JSON.parse(data)['discounte_rewards']},
+        success: function(data) {discountedRewards = JSON.parse(data)['discounted_rewards']},
         contentType: "application/json; charset=utf-8",
         //dataType: "json"
     })
