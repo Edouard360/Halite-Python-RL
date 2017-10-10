@@ -1,13 +1,17 @@
 """The worker class for training and parallel operations"""
+import logging
+import logging.config
 import multiprocessing
-import time
 import os
+import time
 
 import tensorflow as tf
+from train.decorators import log_args
 
-from train.reward import format_moves, get_game_state
-from networking.start_game import start_game
 from networking.hlt_networking import HLT
+from networking.start_game import start_game
+from train.reward import format_moves, get_game_state
+
 
 def update_target_graph(from_scope, to_scope):
     from_vars = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, from_scope)
@@ -19,12 +23,23 @@ def update_target_graph(from_scope, to_scope):
     return op_holder
 
 
-class Worker():
+class Worker:
     """
     The Worker class for training. Each worker has an individual port, number, and agent.
     Each of them work with the global session, and use the global saver.
     """
+
+    @log_args
     def __init__(self, port, number, agent):
+        # Logger definition
+        log_file_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                                     'logger.ini')
+        logging.config.fileConfig(log_file_path, disable_existing_loggers=False)
+        self.logger = logging.getLogger(__name__)
+
+        # Log __init__ arguments to DEBUG level
+        self.logger.debug('port: {} number: {} agent: {}'.format(port, number, agent))
+
         self.name = 'worker_' + str(number)
         self.number = number
         self.port = port + number
@@ -36,10 +51,13 @@ class Worker():
         self.p.start()
         time.sleep(1)
 
-        self.hlt = HLT(port=self.port) # Launching the pipe operation
+        self.hlt = HLT(port=self.port)  # Launching the pipe operation
         self.agent = agent
 
         self.update_local_ops = update_target_graph('global', self.name)
+
+        # We finished correctly
+        self.logger.info('{} __init__ completed'.format(self.name))
 
     def work(self, sess, saver, n_simultations):
         """
@@ -52,7 +70,7 @@ class Worker():
         Afterwards the process is stopped.
         :return:
         """
-        print("Starting worker " + str(self.number))
+        self.logger.info("Starting worker {}".format(self.number))
 
         with sess.as_default(), sess.graph.as_default():
             for i in range(n_simultations):  # while not coord.should_stop():
@@ -79,9 +97,13 @@ class Worker():
                                 + '/public/models/variables/' \
                                 + self.agent.name + '/'
                     if not os.path.exists(directory):
-                        print("Creating directory for agent :" + self.agent.name)
+                        self.logger.info('Creating directory for agent : {}'.format(self.agent.name))
                         os.makedirs(directory)
                     saver.save(sess, directory + self.agent.name)
                     self.agent.experience.save_metric(directory + self.agent.name)
 
         self.p.terminate()
+
+
+if __name__ == '__main__':
+    worker_ = Worker(1, 2, 3)
