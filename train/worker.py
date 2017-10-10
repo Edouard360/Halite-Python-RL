@@ -7,10 +7,10 @@ import time
 
 import tensorflow as tf
 from train.decorators import log_args
+from train.reward import format_moves, get_game_state
 
 from networking.hlt_networking import HLT
 from networking.start_game import start_game
-from train.reward import format_moves, get_game_state
 
 
 def update_target_graph(from_scope, to_scope):
@@ -38,7 +38,7 @@ class Worker:
         self.logger = logging.getLogger(__name__)
 
         # Log __init__ arguments to DEBUG level
-        self.logger.debug('port: {} number: {} agent: {}'.format(port, number, agent))
+        self.logger.debug('port: %d number: %d agent: %d', port, number, agent)
 
         self.name = 'worker_' + str(number)
         self.number = number
@@ -57,7 +57,7 @@ class Worker:
         self.update_local_ops = update_target_graph('global', self.name)
 
         # We finished correctly
-        self.logger.info('{} __init__ completed'.format(self.name))
+        self.logger.info('%s __init__ completed', self.name)
 
     def work(self, sess, saver, n_simultations):
         """
@@ -70,7 +70,7 @@ class Worker:
         Afterwards the process is stopped.
         :return:
         """
-        self.logger.info("Starting worker {}".format(self.number))
+        self.logger.info("Starting worker %d", self.number)
 
         with sess.as_default(), sess.graph.as_default():
             for i in range(n_simultations):  # while not coord.should_stop():
@@ -97,13 +97,9 @@ class Worker:
                                 + '/public/models/variables/' \
                                 + self.agent.name + '/'
                     if not os.path.exists(directory):
-                        self.logger.info('Creating directory for agent : {}'.format(self.agent.name))
+                        self.logger.info('Creating directory for agent : %s', self.agent.name)
                         os.makedirs(directory)
                     saver.save(sess, directory + self.agent.name)
                     self.agent.experience.save_metric(directory + self.agent.name)
 
         self.p.terminate()
-
-
-if __name__ == '__main__':
-    worker_ = Worker(1, 2, 3)

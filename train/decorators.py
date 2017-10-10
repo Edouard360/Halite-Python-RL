@@ -46,7 +46,7 @@ def log_args(func):
         # Add them to the list of parameters to print
         params.append(('defaults', defaults_mapped))
         # Log our parameters
-        logger.debug('{} ({})'.format(func.__name__, ', '.join('%s = %r' % p for p in params)))
+        logger.debug('%s (%s)', func.__name__, ', '.join('%s = %r' % p for p in params))
         # Return our function execution
         return func(*func_args, **func_kwargs)
 
@@ -58,6 +58,7 @@ def log_args(func):
 def awesome_function(a, b, c=1, d='Edouard', e='est pd'):
     print(a + b + c)
     print('{} {}'.format(d, e))
+
 
 # For test purposes
 if __name__ == '__main__':
