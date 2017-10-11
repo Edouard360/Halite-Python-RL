@@ -2,10 +2,10 @@
 import random
 
 from public.hlt import Move, NORTH, STILL, WEST
-from public.models.bot.Bot import Bot
+from public.models.strategy.Strategy import Strategy
 
 
-class ImprovedBot(Bot):
+class ImprovedStrategy(Strategy):
     def compute_moves(self, game_map):
         """Compute the moves given a game_map"""
         moves = []

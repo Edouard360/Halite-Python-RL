@@ -1,0 +1,11 @@
+{
+    "agent":{
+        "type":"vanilla",
+        "scope":2,
+        "h_size":200
+    },
+    "dijkstra":{
+        "scope":2
+    },
+    "saving_name": "vanilla-scope-2"
+}

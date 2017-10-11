@@ -4,9 +4,7 @@ import sys
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 try:
-    from public.state.state import State1
-    from public.models.bot.TrainedBot import TrainedBot
-    from public.models.agent.VanillaAgent import VanillaAgent
+    from public.models.strategy.TrainedStrategy import TrainedStrategy
     from networking.hlt_networking import HLT
 except:
     raise
@@ -18,7 +16,8 @@ else:  # 'local' mode
     port = int(sys.argv[1]) if len(sys.argv) > 1 else 2000
     hlt = HLT(port=port)
 
-bot = TrainedBot(VanillaAgent, State1(scope=2))
+bot = TrainedStrategy()
+bot.init_session()
 
 while True:
     my_id, game_map = hlt.get_init()

@@ -1,7 +1,8 @@
 """Importing the game from aws"""
-import os
 import json
+import os
 import urllib.request
+
 import numpy as np
 
 
@@ -30,9 +31,9 @@ def text_to_game(text):
     return game_states, moves
 
 
-def game_states_from_file(filepath=None):
-    path_to_hlt = 'visualize/hlt/' if filepath is None else filepath  # 'visualize/hlt/'
+def game_states_from_file():
+    path_to_hlt = os.path.abspath(os.path.join(os.path.dirname(__file__), '../visualize/hlt/'))  # 'visualize/hlt/'
 
-    hlt_files = [hlt_file for hlt_file in os.listdir(path_to_hlt) if hlt_file != '.DS_Store']
+    hlt_files = [hlt_file for hlt_file in os.listdir(path_to_hlt) if hlt_file not in ['.DS_Store', 'README.md']]
     filepath = hlt_files[0]
-    return text_to_game(open(path_to_hlt + filepath).read())
+    return text_to_game(open(path_to_hlt + '/' + filepath).read())
