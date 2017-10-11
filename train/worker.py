@@ -1,14 +1,11 @@
 """The worker class for training and parallel operations"""
 import multiprocessing
-import os
 import time
 
 import tensorflow as tf
 
 from networking.hlt_networking import HLT
 from networking.start_game import start_game
-from public.hlt import format_moves
-from public.state.state import get_game_state
 
 
 def update_target_graph(from_scope, to_scope):
@@ -27,7 +24,7 @@ class Worker():
     Each of them work with the global session, and use the global saver.
     """
 
-    def __init__(self, port, number, agent):
+    def __init__(self, port, number, strategy):
         self.name = 'worker_' + str(number)
         self.number = number
         self.port = port + number
@@ -41,8 +38,7 @@ class Worker():
         time.sleep(1)
 
         self.hlt = HLT(port=self.port)  # Launching the pipe operation
-        self.agent = agent
-
+        self.strategy = strategy
         self.update_local_ops = update_target_graph('global', self.name)
 
     def work(self, sess, saver, n_simultations):
@@ -51,13 +47,13 @@ class Worker():
         the worker works `n_simultations` games to train the
         agent
         :param sess: The global session
-        :param saver: The saver
         :param n_simultations: Number of max simulations to run.
         Afterwards the process is stopped.
         :return:
         """
         print("Starting worker " + str(self.number))
 
+        self.strategy.init_session(sess, saver)
         with sess.as_default(), sess.graph.as_default():
             for i in range(n_simultations):  # while not coord.should_stop():
                 if i % 10 == 1 and self.number == 0:
@@ -65,28 +61,14 @@ class Worker():
                 sess.run(self.update_local_ops)  # GET THE WORK DONE FROM OTHER
                 my_id, game_map = self.hlt.get_init()
                 self.hlt.send_init("MyPythonBot")
-
-                moves = []
-                game_states = []
+                self.strategy.set_id(my_id)
                 while self.hlt.get_string() == 'Get map and play!':
                     game_map.get_frame(self.hlt.get_string())
-                    game_states += [get_game_state(game_map, my_id)]
-                    moves1, moves2 = self.agent.choose_actions(sess, game_states[-1])
-                    moves += [moves1]  # We only train on this
-                    self.hlt.send_frame(format_moves(game_map, -(moves1 * moves2)))
+                    self.hlt.send_frame(self.strategy.compute_moves(game_map, train=True))
 
-                self.agent.experience.add_episode(game_states, moves)
-                self.agent.update_agent(sess)
+                self.strategy.add_episode()
+                self.strategy.update_agent()
 
                 if self.number == 0:
-                    directory = os.path.abspath(
-                        os.path.join(os.path.dirname(__file__), '..')) \
-                                + '/public/models/variables/' \
-                                + self.agent.name + '/'
-                    if not os.path.exists(directory):
-                        print("Creating directory for agent :" + self.agent.name)
-                        os.makedirs(directory)
-                    saver.save(sess, directory + self.agent.name)
-                    self.agent.experience.save_metric(directory + self.agent.name)
-
+                    self.strategy.save()
         self.p.terminate()

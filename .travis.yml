@@ -26,6 +26,7 @@ script:
   - find . -iname "*.py" | xargs pylint
 
   # Coverage checks
+  - python networking/start_game.py -sp "OpponentBot.py"
   - py.test --cov=train tests/
 
 after_success:

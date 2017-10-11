@@ -32,7 +32,8 @@ class TestReward(unittest.TestCase):
         game_url = 'https://s3.eu-central-1.amazonaws.com/halite-python-rl/hlt-games/trained-bot.hlt'
         game_states, moves = game_states_from_url(game_url)
 
-        r = Reward(State1())
+        s = State1()
+        r = Reward(s)
         raw_rewards = r.raw_rewards_function(game_states)
         self.assertTrue(len(raw_rewards) == len(game_states) - 1)
 
@@ -40,9 +41,10 @@ class TestReward(unittest.TestCase):
         self.assertTrue(len(all_states) >= len(game_states) - 1)
         self.assertTrue(len(all_moves) >= len(moves))
         self.assertTrue(len(all_rewards) == len(all_moves) and len(all_states) == len(all_moves))
-        experience = ExperienceVanilla(r)
-        experience.add_episode(game_states, moves)
-        experience.add_episode(game_states, moves)
+
+        experience = ExperienceVanilla(s.local_size, name='')
+        experience.add_episode(game_states, all_states, all_moves, all_rewards)
+        experience.add_episode(game_states, all_states, all_moves, all_rewards)
         self.assertTrue(len(experience.moves) == 2 * len(all_moves))
         batch_states, batch_moves, batch_rewards = experience.batch()
         self.assertTrue(len(batch_rewards) == len(batch_moves) and len(batch_states) == len(batch_moves))

@@ -17,7 +17,7 @@ We had dealt with the problem of border squares, learning with a neural network.
 
 Dijsktra algorithm, which runs here in linear time, gives us the ability  
 
-## Our currently trained vanilla model
+## Our currently trained vanilla model with scope 1
 
 Trained for 3h with 8 workers, each simulating 2500 games. The batch_size was 128.
 
@@ -49,4 +49,19 @@ And finally the chosen state was:
 
 ```
 State1(scope=2)
+```
+
+## With scope 2
+
+```
+State1(scope=2)
+lr=1e-4, a_size=5, h_size=200
+width=25, height=25, max_turn=50,max_strength=60
+...
+0.1 * np.power(get_prod(game_states[i + 1]) - get_prod(game_states[i]), 2)
+...
+discount_factor=0.6
+...
+0.01
+discounted_rewards[t] = running_reward - 0.01
 ```

@@ -11,13 +11,11 @@ import numpy as np
 import pandas as pd
 from flask import Flask, render_template, request, make_response, send_from_directory
 
-
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 try:
     from train.reward.reward import Reward
     from public.state.state import State1
-    from public.models.bot.TrainedBot import TrainedBot
-    from public.models.agent.VanillaAgent import VanillaAgent
+    from public.models.strategy.TrainedStrategy import TrainedStrategy
 except:
     raise
 
@@ -76,7 +74,8 @@ def performance_plot():
     fig = Figure()
     sub1 = fig.add_subplot(111)
     path_to_variables = os.path.abspath(os.path.dirname(__file__)) + '/../public/models/variables/'
-    list_variables = [name for name in os.listdir(path_to_variables) if name != "README.md"]
+    list_variables = [name for name in os.listdir(path_to_variables) if name not in [".DS_Store", "README.md"]]
+
     path_to_npy = [path_to_variables + name + '/' + name + '.npy' for name in list_variables]
 
     rewards = [np.load(path) for path in path_to_npy]
@@ -137,6 +136,7 @@ def post_discounted_rewards():
 @app.route('/post_policies', methods=['POST'])
 def post_policies():
     game_states, _ = convert(request)
-    bot = TrainedBot(VanillaAgent, State1(scope=2))
-    policies = np.array([bot.get_policies(game_state) for game_state in game_states])
+    bot = TrainedStrategy()
+    bot.init_session()
+    policies = bot.get_policies(game_states)
     return json.dumps({'policies': policies.tolist()})

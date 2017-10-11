@@ -105,7 +105,8 @@ ENV/
 .mypy_cache/
 .benchmarks/
 public/halite
-public/models/variables/vanilla/
+public/models/variables/*
 src/core/Halite.o
 src/main.o
 src/networking/Networking.o
+visualize/other_hlt/
