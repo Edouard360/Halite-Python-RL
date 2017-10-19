@@ -8,7 +8,7 @@ clean:
 
 .PHONY: sync-nefeli
 sync-nefeli:
-	rsync -a --exclude 'public/halite' --exclude '*.o' . mehlman@nefeli.math-info.univ-paris5.fr:/home/mehlman/Halite-Python-RL/ #--delete
+	rsync -a . mehlman@nefeli.math-info.univ-paris5.fr:/home/mehlman/Halite-Python-RL/ --delete
 
 .PHONY: get-nefeli
 get-nefeli:
@@ -16,7 +16,7 @@ get-nefeli:
 
 .PHONY: sync-solon
 sync-solon:
-	rsync -a --exclude 'public/halite' --exclude '*.o' . solon:/home/mehlman/Halite-Python-RL/ #--delete
+	rsync -a --exclude 'public/halite' --exclude '*.o' . solon:/home/mehlman/Halite-Python-RL/ --delete
 
 .PHONY: get-solon
 get-solon:
@@ -33,3 +33,5 @@ server:
 .PHONY: debug-server
 debug-server:
 	cd visualize;FLASK_APP=visualize.py FLASK_DEBUG=1 python -m flask run
+
+#scp mehlman@nefeli.math-info.univ-paris5.fr:/home/mehlman/Halite-Python-RL/public/models/variables/vanilla-2 public/models/variables/vanilla-2

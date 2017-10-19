@@ -326,8 +326,12 @@ int Networking::handleInitNetworking(unsigned char playerTag, const hlt::Map & m
 
     std::string response;
     try {
+        std::string readyToReplay = getString(playerTag);
+        std::cout << "I'm ready to replay"<<readyToReplay<<std::endl;
         std::string playerTagString = std::to_string(playerTag), mapSizeString = serializeMapSize(m), mapString = serializeMap(m), prodString = serializeProductions(m);
+        std::cout << "I'm sending the player tag"<<playerTagString<<std::endl;
         sendString(playerTag, playerTagString);
+        std::cout << "Now I'm sending the map size"<<mapSizeString<<std::endl;
         sendString(playerTag, mapSizeString);
         sendString(playerTag, prodString);
         sendString(playerTag, mapString);
@@ -339,7 +343,6 @@ int Networking::handleInitNetworking(unsigned char playerTag, const hlt::Map & m
         std::chrono::high_resolution_clock::time_point initialTime = std::chrono::high_resolution_clock::now();
         response = getString(playerTag, ALLOTTED_MILLIS);
         unsigned int millisTaken = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - initialTime).count();
-
         player_logs[playerTag - 1] += response + "\n --- Bot used " + std::to_string(millisTaken) + " milliseconds ---";
 
         *playerName = response.substr(0, 30);

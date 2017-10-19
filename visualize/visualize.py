@@ -4,29 +4,65 @@ import os
 import sys
 from io import BytesIO
 
-import numpy as np
-import pandas as pd
-from flask import Flask, render_template, request, make_response
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
+import numpy as np
+import pandas as pd
+from flask import Flask, render_template, request, make_response, send_from_directory
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 try:
-    from train.reward import discounted_rewards_function
-    from public.models.bot.trainedBot import TrainedBot
+    from train.reward.reward import Reward
+    from public.state.state import State1
+    from public.models.strategy.TrainedStrategy import TrainedStrategy
 except:
     raise
 
 app = Flask(__name__)
 
+hlt_root = os.path.join(app.root_path, 'hlt')
+
+
+@app.route('/hlt/<path:path>')
+def send_hlt(path):
+    return send_from_directory('hlt', path)
+
 
 @app.route("/")
 def home():
-    return render_template('visualizer.html')
+    return render_template('visualizer.html', tree=make_tree(hlt_root))
 
 
-print("Look at http://127.0.0.1:5000/performance.png for performance insights")
+@app.route("/performance.html")
+def performance():
+    """
+    Return the page for the performance
+    :return:
+    """
+    return render_template('performance.html')
+
+
+def make_tree(path):
+    """
+    For finding the halite file, we provide their directory tree.
+    :return:
+    """
+    tree = dict(name=os.path.basename(path), children=[])
+    try:
+        lst = os.listdir(path)
+    except OSError:
+        pass
+    else:
+        for name in lst:
+            fn = os.path.join(path, name)
+            if os.path.isdir(fn):
+                tree['children'].append(make_tree(fn))
+            else:
+                if name not in [".DS_Store", "README.md"]:
+                    tree['children'].append(dict(path='hlt/' + name, name=name))
+                print(np)
+    return tree
 
 
 @app.route("/performance.png")
@@ -38,7 +74,8 @@ def performance_plot():
     fig = Figure()
     sub1 = fig.add_subplot(111)
     path_to_variables = os.path.abspath(os.path.dirname(__file__)) + '/../public/models/variables/'
-    list_variables = [name for name in os.listdir(path_to_variables) if name != "README.md"]
+    list_variables = [name for name in os.listdir(path_to_variables) if name not in [".DS_Store", "README.md"]]
+
     path_to_npy = [path_to_variables + name + '/' + name + '.npy' for name in list_variables]
 
     rewards = [np.load(path) for path in path_to_npy]
@@ -65,6 +102,7 @@ def convert(r):
     :param r:
     :return:
     """
+
     def get_owner(square):
         return square['owner']
 
@@ -90,13 +128,15 @@ def convert(r):
 @app.route('/post_discounted_rewards', methods=['POST'])
 def post_discounted_rewards():
     game_states, moves = convert(request)
-    discounted_rewards = discounted_rewards_function(game_states, moves)
-    return json.dumps({'discounted_rewards_function': discounted_rewards.tolist()})
+    r = Reward(State1(scope=2))
+    discounted_rewards = r.discounted_rewards_function(game_states, moves)
+    return json.dumps({'discounted_rewards': discounted_rewards.tolist()})
 
 
 @app.route('/post_policies', methods=['POST'])
 def post_policies():
     game_states, _ = convert(request)
-    bot = TrainedBot()
-    policies = np.array([bot.get_policies(game_state) for game_state in game_states])
+    bot = TrainedStrategy()
+    bot.init_session()
+    policies = bot.get_policies(game_states)
     return json.dumps({'policies': policies.tolist()})

@@ -2,6 +2,7 @@ tensorflow
 coverage>=3.6
 pytest-cov
 pytest-xdist
+pytest-benchmark>=3.1
 coveralls
 pylint>=1.6
 flask

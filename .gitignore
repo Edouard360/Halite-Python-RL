@@ -103,3 +103,10 @@ ENV/
 
 # mypy
 .mypy_cache/
+.benchmarks/
+public/halite
+public/models/variables/*
+src/core/Halite.o
+src/main.o
+src/networking/Networking.o
+visualize/other_hlt/

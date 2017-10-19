@@ -1,5 +1,5 @@
 """The General Bot class"""
-class Bot:
+class Strategy:
     def compute_moves(self, game_map):
         pass
 

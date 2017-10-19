@@ -22,11 +22,12 @@ install:
 
 script:
   # Tests
-  - python -m unittest discover -v
-  - find . -iname "*.py" | xargs pylint
+ - python -m unittest discover -v
+ - find . -iname "*.py" | xargs pylint
 
   # Coverage checks
-  - py.test --cov=train tests/
+ - python networking/start_game.py -sp "OpponentBot.py"
+ - py.test --cov=train tests/
 
 after_success:
   coveralls

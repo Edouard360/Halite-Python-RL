@@ -12,7 +12,27 @@
 <body class="">
 <div id="container" class="container">
         <div id="pageContent" class="pageContent text-center">
-            <div id="displayArea" class="col-sm-12 text-center"><div class="row"><div class="col-md-1"></div><div class="col-md-10"><h3 style="margin-top: 0px;"><span style="color: #FFFFFF;">Drag your file</span></h3></div></div><canvas width="703" height="527" style="cursor: inherit;"></canvas><br></div>
+            <div class="col-md-1"></div>
+                <div class="col-md-10"><h3 style="margin-top: 0px;"><span style="color: #FFFFFF;">Drag your file</span></h3>
+                    <h4><a href="performance.html">Go to performance plot</a></h4>
+                </div>
+            <div id="displayArea" class="col-sm-12 text-center"><div class="row">
+
+            </div>
+                <canvas width="703" height="527" style="cursor: inherit;"></canvas><br>
+            </div>
+
+        </div>
+    </div>
+
+    <br>
+    <div class="container text-center">
+        <div class="row">
+            <ul class="list-group">
+            {%- for item in tree.children recursive %}
+                <li class="list-group-item list-group-item-success" id="{{item.path}}"> {{ item.name }} </li>
+            {%- endfor %}
+            </ul>
         </div>
     </div>
 
