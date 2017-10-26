@@ -326,12 +326,8 @@ int Networking::handleInitNetworking(unsigned char playerTag, const hlt::Map & m
 
     std::string response;
     try {
-        std::string readyToReplay = getString(playerTag);
-        std::cout << "I'm ready to replay"<<readyToReplay<<std::endl;
         std::string playerTagString = std::to_string(playerTag), mapSizeString = serializeMapSize(m), mapString = serializeMap(m), prodString = serializeProductions(m);
-        std::cout << "I'm sending the player tag"<<playerTagString<<std::endl;
         sendString(playerTag, playerTagString);
-        std::cout << "Now I'm sending the map size"<<mapSizeString<<std::endl;
         sendString(playerTag, mapSizeString);
         sendString(playerTag, prodString);
         sendString(playerTag, mapString);
