@@ -9,59 +9,34 @@ categories: main
   {% include center.css %}
 </style>
 
+# Expansion at the border
+
+As detailed in the previous blog articles, we train jointly the individual agents at the border of the map. As you can see below, we obtain 
+an agent that perform significantly well at small scale. Indeed, it has learnt to conquer the **highly productive squares** (the bright ones) **in priority**.
+
+<p align="center">
+<img height="220" width="220" src="https://user-images.githubusercontent.com/15527397/33241911-e22a4b74-d2cc-11e7-9a31-d89129b1248a.gif">
+</p>
+
+To assess the confidence of our agent, we can look at the **entropy** of the learnt policy. For convenience, we implemented a interface that displays the **softmax probabilities** at time t as you click on the agent.
+We can see the 5 NORTH-EAST-SOUTH-WEST-STILL probabilities associated with each move, and how the agent greedily selects them.
+
+<p align="center">
+<img height="220" width="220" src="https://user-images.githubusercontent.com/15527397/33241913-e8c55514-d2cc-11e7-808c-0b89fbb9d547.gif">
+ </p>
+
 # The Dijsktra algorithm
 
 ## The power of Dijsktra
 
 We had dealt with the problem of border squares, learning with a neural network.
 
-Dijsktra algorithm, which runs here in linear time, gives us the ability  
+The Dijsktra algorithm, which runs here in linear time, gives us the ability to handle the squares in the middle of the map:
 
-## Our currently trained vanilla model with scope 1
+Now, only the borders's behaviour is determined by our trained policy. We adopt a **deterministic strategy for the interior of the map**.
 
-Trained for 3h with 8 workers, each simulating 2500 games. The batch_size was 128.
+<p align="center">
+<img height="220" width="220" src="https://user-images.githubusercontent.com/15527397/33241925-fc114948-d2cc-11e7-8c39-fed8064a466f.gif">
+<img height="220" width="220" src="https://user-images.githubusercontent.com/15527397/33241930-1388cd26-d2cd-11e7-87a8-d775c81efc01.gif">
+ </p>
 
-Every worker would update his agent - and then the global agent - after each game / episode is played.
-
-```
-self.agent.experience.add_episode(game_states, moves)
-self.agent.update_agent(sess)
-```
-
-Parameters:
-
-```
-lr=1e-3, a_size=5, h_size=50
-```
-
-The main features of the reward function were the following:
-
-```
-np.array([np.power(get_prod(game_states[i + 1]) - get_prod(game_states[i]),1)
-             for i in range(len(game_states) - 1)])
-...
-discount_factor=0.6
-...
-discounted_rewards[t] = running_reward - 0.1
-```
-
-And finally the chosen state was:
-
-```
-State1(scope=2)
-```
-
-## With scope 2
-
-```
-State1(scope=2)
-lr=1e-4, a_size=5, h_size=200
-width=25, height=25, max_turn=50,max_strength=60
-...
-0.1 * np.power(get_prod(game_states[i + 1]) - get_prod(game_states[i]), 2)
-...
-discount_factor=0.6
-...
-0.01
-discounted_rewards[t] = running_reward - 0.01
-```
